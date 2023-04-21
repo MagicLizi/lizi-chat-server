@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from typing import Union
+
 router = APIRouter()
 
 
@@ -9,7 +10,7 @@ async def login():
 
 
 @router.get('/sms')
-async def get_sms_code():
+async def get_sms_code(mobile: str):
     return {}
 
 
