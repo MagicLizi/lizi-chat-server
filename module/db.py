@@ -38,6 +38,8 @@ class User(Base):
                 cnt = len(result.fetchall())
                 await s.commit()
                 if cnt == 1:
+                    u = User(**result.first().__dict__)
+                    logger.log(u.id)
                     return 1
                 else:
                     return 0
