@@ -1,20 +1,63 @@
 from fastapi import APIRouter
 from typing import Union
-
+from module.db import SmsCode,User
+from module.api import SmsReq, SmsRes, Code, LoginReq, LoginRes
+from util.submail import SubmailUtil
+import random
+from util.log import logger
 router = APIRouter()
 
 
-@router.get('/login')
-async def login():
-    return {}
+@router.post('/login')
+async def login(login_req: LoginReq):
+    # 先校验验证码是否正确
+    ms_verify_rst = await SmsCode.verify_sms_code(login_req.mobile, login_req.code)
+    ms_verify_rst = 1
+    if ms_verify_rst == 1:
+        if await User.user_exist(login_req.mobile) == 1:
+            # 账号存在直接登录
+            return {"code": Code.SUCCESS, "data": LoginRes(token="your token is xxx", is_new=False), "msg": "登录成功"}
+        else:
+            # 账号不存在就自动注册
+            user_id = await User.create_user(login_req.mobile)
+            if user_id > 0:
+                logger.info(user_id)
+                return {"code": Code.SUCCESS, "data": LoginRes(token="your token is xxx", is_new=True),
+                        "msg": "注册成功"}
+            else:
+                return {"code": Code.DB_ERROR, "msg": "系统错误"}
+    elif ms_verify_rst == 0:
+        return {"code": Code.VER_SMS_CODE_ERROR, "msg": "验证码错误"}
+    elif ms_verify_rst == -1:
+        return {"code": Code.DB_ERROR, "msg": "系统错误"}
 
 
-@router.get('/sms')
-async def get_sms_code(mobile: str):
-    return {}
+@router.post('/sms')
+async def get_sms_code(sms_req: SmsReq):
+    get_sms_rst = await SmsCode.get_sms_code(sms_req.mobile)
+    if get_sms_rst == 1:
+        # 生成验证码，并且插入数据库
+        digits = "0123456789"
+        code = ""
+        for i in range(6):
+            index = random.randint(0, len(digits) - 1)
+            code += digits[index]
+        insert_rst = await SmsCode.insert_sms_code(sms_req.mobile, code)
+        if insert_rst != -1:
+            # 发送验证码
+            send_rst = await SubmailUtil.send_code(sms_req.mobile, "4O5BL2", code)
+            if send_rst["status"] == "success":
+                return {"code": Code.SUCCESS, "data": SmsRes(60), "msg": "获取验证码成功"}
+            else:
+                return {"code": Code.GET_SMS_ERROR, "msg": "发送验证码失败"}
+        else:
+            return {"code": Code.DB_ERROR, "msg": "系统错误"}
+    elif get_sms_rst == 0:
+        return {"code": Code.GET_SMS_ERROR, "msg": "发送验证码过于频繁"}
+    elif get_sms_rst == -1:
+        return {"code": Code.DB_ERROR, "msg": "系统错误"}
 
 
 @router.get("/roles")
 async def get_roles(page_index: int = 0, page_count: Union[int, None] = 10):
     return {"page_index": page_index, "page_count": page_count}
-
