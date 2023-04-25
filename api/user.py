@@ -13,7 +13,6 @@ router = APIRouter()
 async def login(login_req: LoginReq):
     # 先校验验证码是否正确
     ms_verify_rst = await SmsCode.verify_sms_code(login_req.mobile, login_req.code)
-    # ms_verify_rst = 1
     if ms_verify_rst == 1:
         user_id = await User.user_exist(login_req.mobile)
         if user_id > 0:
