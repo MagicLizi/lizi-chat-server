@@ -42,4 +42,16 @@ class EditProfileReq(LiziBaseModel):
     avatar_url: str
 
 
+class RolesRes:
+    def __init__(self, roles):
+        self.list = roles
 
+
+class ChatSayReq(LiziBaseModel):
+    role_id: int
+    content: str
+
+
+class ChatSayRes:
+    def __init__(self, content):
+        self.content = content

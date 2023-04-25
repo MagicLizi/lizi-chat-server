@@ -234,3 +234,81 @@ INFO:     2023-04-25 10:29:29,405 - b'{"name": "lizi", "avatar_url": "xxx", "use
 INFO:     2023-04-25 10:29:29,405 - lizi - user - edit_user_profile - line:71
 INFO:     2023-04-25 10:29:39,993 - b'{"name": "lizi", "avatar_url": "xxx", "user_id": 1}' - main - edit_body - line:22
 INFO:     2023-04-25 10:29:39,994 - 1 - user - edit_user_profile - line:71
+INFO:     2023-04-25 10:58:28,383 - b'{"name": "lizi", "avatar_url": "xxx", "user_id": 1}' - main - edit_body - line:22
+INFO:     2023-04-25 10:58:41,844 - b'{"name": "lizi1", "avatar_url": "xxx", "user_id": 1}' - main - edit_body - line:22
+INFO:     2023-04-25 10:59:55,099 - b'{"name": "lizi1", "avatar_url": "test", "user_id": 1}' - main - edit_body - line:22
+INFO:     2023-04-25 11:36:48,420 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:37:30,375 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:38:05,008 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:38:05,102 - (1, '翻译工具') - db - get_roles - line:148
+INFO:     2023-04-25 11:38:33,896 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:39:08,286 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:39:08,408 - 1-翻译工具 - db - get_roles - line:148
+INFO:     2023-04-25 11:39:08,408 - (1, '翻译工具') - db - get_roles - line:149
+INFO:     2023-04-25 11:41:03,389 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:41:04,136 - <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x00000223236AC7C0> - db - get_roles - line:148
+INFO:     2023-04-25 11:42:23,116 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:42:23,198 - [{'id': 1, 'title': '翻译工具'}] - chat - get_roles - line:15
+INFO:     2023-04-25 11:43:54,989 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:45:17,966 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:45:37,514 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:46:40,146 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:46:40,146 -  - main - user_verify - line:51
+INFO:     2023-04-25 11:47:38,134 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:47:38,134 -  - main - user_verify - line:51
+INFO:     2023-04-25 11:49:38,001 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:50:33,719 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:51:59,455 - GET - main - user_verify - line:46
+INFO:     2023-04-25 11:53:34,374 - <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.httptools_impl.RequestResponseCycle object at 0x0000027EA6CE3130>> - main - user_verify - line:50
+INFO:     2023-04-25 12:04:10,504 - {} - main - user_verify - line:53
+INFO:     2023-04-25 12:04:33,022 - {'user_id': 1} - main - user_verify - line:54
+INFO:     2023-04-25 12:10:44,841 - {'test': '123', 'user_id': 1} - main - user_verify - line:54
+INFO:     2023-04-25 12:11:52,768 - http://127.0.0.1:8000/chat/roles?test=123 - main - user_verify - line:54
+INFO:     2023-04-25 12:12:05,509 - test=123 - main - user_verify - line:54
+INFO:     2023-04-25 12:12:36,356 - test=123 - main - user_verify - line:54
+INFO:     2023-04-25 12:12:36,356 - http://127.0.0.1:8000/chat/roles?test=123&user_id=1 - main - user_verify - line:56
+INFO:     2023-04-25 12:12:52,407 - test=123 - main - user_verify - line:54
+INFO:     2023-04-25 12:12:52,407 - http://127.0.0.1:8000/chat/roles?test=123&user_id=1 - main - user_verify - line:57
+INFO:     2023-04-25 12:13:02,275 - test=123 - main - user_verify - line:54
+INFO:     2023-04-25 12:13:14,229 - test=123 - main - user_verify - line:54
+INFO:     2023-04-25 12:13:19,774 - test=123 - main - user_verify - line:54
+INFO:     2023-04-25 12:13:19,775 - http://127.0.0.1:8000/chat/roles?test=123&user_id=1 - main - user_verify - line:57
+INFO:     2023-04-25 12:13:26,998 - test=123 - main - user_verify - line:54
+INFO:     2023-04-25 12:13:26,998 - test=123&user_id=1 - main - user_verify - line:57
+INFO:     2023-04-25 12:13:57,665 - test=123 - main - user_verify - line:54
+INFO:     2023-04-25 12:13:57,665 - test=123&user_id=1 - main - user_verify - line:57
+INFO:     2023-04-25 12:14:18,703 - test=123 - main - user_verify - line:54
+INFO:     2023-04-25 12:14:18,703 - test=123&user_id=1 - main - user_verify - line:57
+INFO:     2023-04-25 12:14:24,541 - test=123 - main - user_verify - line:54
+INFO:     2023-04-25 12:14:24,541 - test=123&user_id=1 - main - user_verify - line:57
+INFO:     2023-04-25 12:14:24,542 - test=123 - chat - get_roles - line:12
+INFO:     2023-04-25 14:15:09,972 - test=123 - chat - get_roles - line:12
+INFO:     2023-04-25 14:15:44,320 - test=123&user_id=1 - main - user_verify - line:54
+INFO:     2023-04-25 14:15:44,320 - test=123 - chat - get_roles - line:12
+INFO:     2023-04-25 14:18:36,857 - test=123&user_id=1 - main - user_verify - line:54
+INFO:     2023-04-25 14:18:36,857 - {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'client': ('127.0.0.1', 2592), 'scheme': 'http', 'root_path': '', 'headers': [(b'token', b'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJtb2JpbGUiOiIxMzUwMTgwMTE4MSJ9.zyRYdTso6ScTmLJe1oRGqH9G9C_uP87JnOH25J2anbk'), (b'user-agent', b'PostmanRuntime/7.32.2'), (b'accept', b'*/*'), (b'cache-control', b'no-cache'), (b'postman-token', b'7aaf63f1-d681-487e-bdfb-89f0d8f70e77'), (b'host', b'127.0.0.1:8000'), (b'accept-encoding', b'gzip, deflate, br'), (b'connection', b'keep-alive')], 'state': {}, 'method': 'GET', 'path': '/chat/roles', 'raw_path': b'/chat/roles', 'query_string': b'test=123', 'app': <fastapi.applications.FastAPI object at 0x000001F685F777C0>} - main - user_verify - line:55
+INFO:     2023-04-25 14:18:36,857 - test=123 - chat - get_roles - line:12
+INFO:     2023-04-25 14:18:59,149 - test=123&user_id=1 - main - user_verify - line:54
+INFO:     2023-04-25 14:19:05,300 - test=123&user_id=1 - main - user_verify - line:54
+INFO:     2023-04-25 14:19:05,300 - b'test=123' - main - user_verify - line:55
+INFO:     2023-04-25 14:19:05,301 - test=123 - chat - get_roles - line:12
+INFO:     2023-04-25 14:19:30,406 - test=123&user_id=1 - main - user_verify - line:54
+INFO:     2023-04-25 14:19:30,406 - b'test=456' - main - user_verify - line:56
+INFO:     2023-04-25 14:19:30,407 - test=456 - chat - get_roles - line:12
+INFO:     2023-04-25 14:36:02,726 - test=123&user_id=1 - chat - get_roles - line:12
+INFO:     2023-04-25 14:36:58,223 - 1 - chat - get_roles - line:12
+INFO:     2023-04-25 14:40:52,820 - b'{"role_id": 1, "content": "hello", "user_id": 1}' - main - edit_body - line:23
+INFO:     2023-04-25 14:59:16,046 - b'{"role_id": 1, "content": "hello", "user_id": 1}' - main - edit_body - line:23
+INFO:     2023-04-25 14:59:16,218 - <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x0000022C070D2080> - db - get_prompts_by_id - line:161
+INFO:     2023-04-25 14:59:45,420 - b'{"role_id": 1, "content": "hello", "user_id": 1}' - main - edit_body - line:23
+INFO:     2023-04-25 14:59:45,489 - 我希望你成为一个合格的翻译机器人，你的名字叫神奇的梨子，能够帮我把我和你说的任何语言翻译成中文，如果我和你说的是中文你会把我和你说的话翻译成很地道的美式英语。\n接下来你开始扮演这位翻译机器人吧。  - db - get_prompts_by_id - line:161
+INFO:     2023-04-25 15:00:22,727 - b'{"role_id": 2, "content": "hello", "user_id": 1}' - main - edit_body - line:23
+INFO:     2023-04-25 15:01:16,256 - b'{"role_id": 2, "content": "hello", "user_id": 1}' - main - edit_body - line:23
+INFO:     2023-04-25 15:01:19,993 - b'{"role_id": 1, "content": "hello", "user_id": 1}' - main - edit_body - line:23
+INFO:     2023-04-25 15:01:42,816 - b'{"role_id": 1, "content": "hello", "user_id": 1}' - main - edit_body - line:23
+INFO:     2023-04-25 15:02:25,879 - b'{"role_id": 1, "content": "hello", "user_id": 1}' - main - edit_body - line:23
+INFO:     2023-04-25 15:03:58,425 - 我希望你成为一个合格的翻译机器人，你的名字叫神奇的梨子，能够帮我把我和你说的任何语言翻译成中文，如果我和你说的是中文你会把我和你说的话翻译成很地道的美式英语。\n接下来你开始扮演这位翻译机器人吧。  - db - get_prompts_by_id - line:165
+INFO:     2023-04-25 15:03:58,425 - 我希望你成为一个合格的翻译机器人，你的名字叫神奇的梨子，能够帮我把我和你说的任何语言翻译成中文，如果我和你说的是中文你会把我和你说的话翻译成很地道的美式英语。\n接下来你开始扮演这位翻译机器人吧。  - chat - chat_say - line:24
+INFO:     2023-04-25 15:04:18,520 - 我希望你成为一个合格的翻译机器人，你的名字叫神奇的梨子，能够帮我把我和你说的任何语言翻译成中文，如果我和你说的是中文你会把我和你说的话翻译成很地道的美式英语。\n接下来你开始扮演这位翻译机器人吧。  - chat - chat_say - line:24
+INFO:     2023-04-25 15:04:57,283 - 我希望你成为一个合格的翻译机器人，你的名字叫神奇的梨子，能够帮我把我和你说的任何语言翻译成中文，如果我和你说的是中文你会把我和你说的话翻译成很地道的美式英语。\n接下来你开始扮演这位翻译机器人吧。  - chat - chat_say - line:24
+INFO:     2023-04-25 15:06:11,818 - 你好。 - chat - chat_say - line:25

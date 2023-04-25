@@ -4,7 +4,6 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy import select, and_, update, insert
 from sqlalchemy.exc import DatabaseError, ProgrammingError
-from typing import Union
 import os
 import time
 from util.log import logger
@@ -129,3 +128,44 @@ class SmsCode(Base):
             except (DatabaseError, ProgrammingError) as e:
                 await s.rollback()
                 return -1
+
+
+class Role(Base):
+    __tablename__ = 'role'
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    prompts = Column(String)
+    is_valid = Column(Integer)
+    create_at = Column(Integer)
+
+    @staticmethod
+    async def get_roles():
+        async with async_session() as s:
+            try:
+                stmt = select(Role.id, Role.title).where(Role.is_valid == 1)
+                roles = await s.execute(stmt)
+                rst_list = []
+                for role in roles:
+                    rst_list.append({"id": role.id, "title": role.title})
+                await s.commit()
+                return rst_list
+            except (DatabaseError, ProgrammingError) as e:
+                await s.rollback()
+                return -1
+
+    @staticmethod
+    async def get_prompts_by_id(role_id: int):
+        async with async_session() as s:
+            try:
+                stmt = select(Role.prompts).where(and_(Role.is_valid == 1, Role.id == role_id))
+                role = await s.execute(stmt)
+                await s.commit()
+                result = role.first()
+                if result is not None:
+                    return result[0]
+                else:
+                    return -1
+            except (DatabaseError, ProgrammingError) as e:
+                await s.rollback()
+            return -1
+
