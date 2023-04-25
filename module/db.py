@@ -6,7 +6,6 @@ from sqlalchemy import select, and_, update, insert
 from sqlalchemy.exc import DatabaseError, ProgrammingError
 import os
 import time
-from util.log import logger
 
 db_path = os.environ["Lizi-Chat-DB"]
 engine = create_async_engine(db_path,
