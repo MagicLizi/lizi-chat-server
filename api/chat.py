@@ -1,8 +1,6 @@
-from typing import Union
 from module.db import Role
-from fastapi import APIRouter, Request
+from fastapi import APIRouter
 from module.api import Code, RolesRes, ChatSayReq, ChatSayRes
-from util.log import logger
 from llm.openai_util import OpenAIUtil
 router = APIRouter()
 
