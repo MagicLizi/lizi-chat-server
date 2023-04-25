@@ -1,9 +1,10 @@
 from fastapi import APIRouter
 from typing import Union
 from module.db import SmsCode,User
-from module.api import SmsReq, SmsRes, Code, LoginReq, LoginRes
+from module.api import SmsReq, SmsRes, Code, LoginReq, LoginRes, EditProfileReq
 from util.submail import SubmailUtil
 import random
+from util.secret import generate_user_token
 from util.log import logger
 router = APIRouter()
 
@@ -12,17 +13,19 @@ router = APIRouter()
 async def login(login_req: LoginReq):
     # 先校验验证码是否正确
     ms_verify_rst = await SmsCode.verify_sms_code(login_req.mobile, login_req.code)
-    ms_verify_rst = 1
+    # ms_verify_rst = 1
     if ms_verify_rst == 1:
-        if await User.user_exist(login_req.mobile) == 1:
+        user_id = await User.user_exist(login_req.mobile)
+        if user_id > 0:
             # 账号存在直接登录
-            return {"code": Code.SUCCESS, "data": LoginRes(token="your token is xxx", is_new=False), "msg": "登录成功"}
+            token = generate_user_token(user_id, login_req.mobile)
+            return {"code": Code.SUCCESS, "data": LoginRes(token=token, is_new=False), "msg": "登录成功"}
         else:
             # 账号不存在就自动注册
             user_id = await User.create_user(login_req.mobile)
             if user_id > 0:
-                logger.info(user_id)
-                return {"code": Code.SUCCESS, "data": LoginRes(token="your token is xxx", is_new=True),
+                token = generate_user_token(user_id, login_req.mobile)
+                return {"code": Code.SUCCESS, "data": LoginRes(token=token, is_new=True),
                         "msg": "注册成功"}
             else:
                 return {"code": Code.DB_ERROR, "msg": "系统错误"}
@@ -58,6 +61,12 @@ async def get_sms_code(sms_req: SmsReq):
         return {"code": Code.DB_ERROR, "msg": "系统错误"}
 
 
-@router.get("/roles")
-async def get_roles(page_index: int = 0, page_count: Union[int, None] = 10):
-    return {"page_index": page_index, "page_count": page_count}
+# @router.get("/roles")
+# async def get_roles(page_index: int = 0, page_count: Union[int, None] = 10):
+#     return {"page_index": page_index, "page_count": page_count}
+
+
+@router.post("/edit_profile")
+async def edit_user_profile(edit_req: EditProfileReq):
+
+    return {"code": Code.SUCCESS, "msg": "设置成功"}

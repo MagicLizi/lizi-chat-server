@@ -155,3 +155,82 @@ INFO:     2023-04-23 20:02:05,993 - 8 - user - login - line:24
 INFO:     2023-04-23 20:06:37,175 - 9 - user - login - line:24
 INFO:     2023-04-23 20:06:39,284 - 10 - user - login - line:24
 INFO:     2023-04-23 20:07:07,421 - 1 - user - login - line:24
+INFO:     2023-04-24 09:58:15,428 - <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x000001B304E2D340> - db - user_exist - line:41
+INFO:     2023-04-24 09:58:35,952 - None - db - user_exist - line:41
+INFO:     2023-04-24 10:06:07,198 - user no - db - user_exist - line:45
+INFO:     2023-04-24 10:06:23,214 - user no - db - user_exist - line:45
+INFO:     2023-04-24 10:07:40,655 - user exist - db - user_exist - line:41
+INFO:     2023-04-24 10:08:36,449 - user exist - db - user_exist - line:41
+INFO:     2023-04-24 10:09:22,516 - user exist - db - user_exist - line:41
+INFO:     2023-04-24 10:09:49,423 - user exist - db - user_exist - line:41
+INFO:     2023-04-24 10:09:49,423 - <module.db.User object at 0x000001826246C6A0> - db - user_exist - line:43
+INFO:     2023-04-24 10:10:08,319 - user exist - db - user_exist - line:41
+INFO:     2023-04-24 10:10:08,319 - 1 - db - user_exist - line:43
+INFO:     2023-04-24 10:48:25,897 - /user/login - main - user_verify - line:10
+INFO:     2023-04-24 10:50:33,461 - None - main - user_verify - line:18
+INFO:     2023-04-24 10:51:30,501 - None - main - user_verify - line:18
+INFO:     2023-04-24 10:52:30,151 - None - main - user_verify - line:18
+INFO:     2023-04-24 10:53:05,279 - None - main - user_verify - line:19
+INFO:     2023-04-24 10:53:29,665 - None - main - user_verify - line:19
+INFO:     2023-04-24 10:53:40,431 - None - main - user_verify - line:19
+INFO:     2023-04-24 10:54:48,872 - None - main - user_verify - line:20
+INFO:     2023-04-24 11:01:59,260 - {'user_id': 1, 'mobile': '13501801181'} - main - user_verify - line:28
+INFO:     2023-04-24 11:25:53,545 - <bound method Request.body of <starlette.requests.Request object at 0x0000018A229AE860>> - main - user_verify - line:30
+INFO:     2023-04-24 11:26:07,743 - <coroutine object Request.body at 0x0000022A1D95FCA0> - main - user_verify - line:30
+INFO:     2023-04-24 11:26:21,118 - <bound method Request.body of <starlette.requests.Request object at 0x00000199363BE830>> - main - user_verify - line:30
+INFO:     2023-04-24 11:27:24,588 - {'name': 'lizi', 'avatar_url': 'xxx'} - main - user_verify - line:30
+INFO:     2023-04-24 11:27:57,992 - b'{"name":"lizi", "avatar_url":"xxx"}' - main - user_verify - line:31
+INFO:     2023-04-24 11:27:57,993 - {'name': 'lizi', 'avatar_url': 'xxx'} - main - user_verify - line:32
+INFO:     2023-04-24 11:35:16,557 - b'{"name":"lizi", "avatar_url":"xxx"}&user_id=1' - main - user_verify - line:31
+INFO:     2023-04-24 11:39:02,916 - {"name": "lizi", "avatar_url": "xxx", "user_id": 1} - main - user_verify - line:33
+INFO:     2023-04-24 11:39:40,717 - b'{"name": "lizi", "avatar_url": "xxx", "user_id": 1}' - main - user_verify - line:34
+INFO:     2023-04-24 11:40:54,394 - b'{"name": "lizi", "avatar_url": "xxx", "user_id": 1}' - main - user_verify - line:34
+INFO:     2023-04-24 11:41:46,999 - <starlette.requests.Request object at 0x00000199ED1BA890> - main - user_verify - line:34
+INFO:     2023-04-24 11:41:58,957 - <starlette.requests.Request object at 0x000001FE2913A950> - main - user_verify - line:30
+INFO:     2023-04-24 11:41:58,957 - <starlette.requests.Request object at 0x000001FE2913A950> - main - user_verify - line:35
+INFO:     2023-04-24 11:43:19,554 - <starlette.requests.Request object at 0x0000024D067DA8F0> - main - user_verify - line:30
+INFO:     2023-04-24 11:43:46,134 - <starlette.requests.Request object at 0x000001578092E8C0> - main - user_verify - line:30
+INFO:     2023-04-24 11:44:08,412 - <starlette.requests.Request object at 0x000001382F68A890> - main - user_verify - line:30
+INFO:     2023-04-24 11:49:09,717 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-24 11:50:33,096 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-24 11:51:42,530 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-24 11:53:31,927 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-24 11:58:26,676 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-24 11:58:54,579 - b'{"name":"test"}' - main - user_verify - line:31
+INFO:     2023-04-24 11:58:54,580 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-24 11:59:25,302 - <coroutine object Request.body at 0x000001FA67C4FC30> - main - user_verify - line:30
+INFO:     2023-04-24 11:59:25,304 - b'{"name":"test"}' - main - user_verify - line:32
+INFO:     2023-04-24 11:59:25,305 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-24 11:59:32,269 - b'{"name":"lizi", "avatar_url":"xxx"}' - main - user_verify - line:30
+INFO:     2023-04-24 11:59:32,269 - b'{"name":"test"}' - main - user_verify - line:32
+INFO:     2023-04-24 11:59:43,459 - b'{"name":"lizi", "avatar_url":"xxx"}' - main - user_verify - line:30
+INFO:     2023-04-24 11:59:43,459 - b'{"name":"test"}' - main - user_verify - line:32
+INFO:     2023-04-24 11:59:43,460 - b'{"name":"test"}' - main - user_verify - line:33
+INFO:     2023-04-24 12:00:46,036 - b'{"name":"lizi", "avatar_url":"xxx"}' - main - user_verify - line:30
+INFO:     2023-04-24 12:00:46,036 - b'{"name":"test"}' - main - user_verify - line:32
+INFO:     2023-04-24 12:02:25,347 - b'{"name":"lizi", "avatar_url":"xxx"}' - main - user_verify - line:30
+INFO:     2023-04-24 12:02:25,348 - b'{"name":"test","avatar_url":"xxxxx"}' - main - user_verify - line:32
+INFO:     2023-04-24 12:02:41,777 - b'{"name":"lizi", "avatar_url":"xxx"}' - main - user_verify - line:30
+INFO:     2023-04-24 12:02:41,777 - b'{"name":"test","avatar_url":"xxxxx"}' - main - user_verify - line:32
+INFO:     2023-04-24 12:02:53,157 - b'{"name":"lizi", "avatar_url":"xxx"}' - main - user_verify - line:30
+INFO:     2023-04-24 12:02:53,158 - b'{"name":"test","avatar_url":"xxxxx"}' - main - user_verify - line:32
+INFO:     2023-04-24 12:04:08,144 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-24 12:12:39,480 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-24 12:12:39,481 - <starlette.middleware.base._StreamingResponse object at 0x000002E9ABE22EF0> - main - user_verify - line:34
+INFO:     2023-04-24 12:13:44,405 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-24 12:13:44,405 - MutableHeaders({'content-length': '33', 'content-type': 'application/json', 'x-process-time': '12332'}) - main - user_verify - line:34
+INFO:     2023-04-24 12:23:44,221 - b'{"name":"lizi", "avatar_url":"xxx"}' - main - user_verify - line:44
+INFO:     2023-04-24 12:24:20,112 - b'{"name":"lizi", "avatar_url":"xxx"}' - main - user_verify - line:44
+INFO:     2023-04-25 10:22:56,985 - b'{"name":"lizi", "avatar_url":"xxx"}' - main - user_verify - line:45
+INFO:     2023-04-25 10:23:57,283 - 1 - main - get_body - line:19
+INFO:     2023-04-25 10:23:57,283 - b'{"name":"lizi", "avatar_url":"xxx"}' - main - user_verify - line:45
+INFO:     2023-04-25 10:27:46,429 - 1 - main - get_body - line:19
+INFO:     2023-04-25 10:27:46,429 - {'name': 'lizi', 'avatar_url': 'xxx', 'user_id': 1} - main - get_body - line:22
+INFO:     2023-04-25 10:28:45,267 - 1 - main - get_body - line:19
+INFO:     2023-04-25 10:28:45,267 - b'{"name": "lizi", "avatar_url": "xxx", "user_id": 1}' - main - get_body - line:23
+INFO:     2023-04-25 10:28:57,557 - b'{"name": "lizi", "avatar_url": "xxx", "user_id": 1}' - main - get_body - line:22
+INFO:     2023-04-25 10:28:57,557 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-25 10:29:29,405 - b'{"name": "lizi", "avatar_url": "xxx", "user_id": 1}' - main - edit_body - line:22
+INFO:     2023-04-25 10:29:29,405 - lizi - user - edit_user_profile - line:71
+INFO:     2023-04-25 10:29:39,993 - b'{"name": "lizi", "avatar_url": "xxx", "user_id": 1}' - main - edit_body - line:22
+INFO:     2023-04-25 10:29:39,994 - 1 - user - edit_user_profile - line:71

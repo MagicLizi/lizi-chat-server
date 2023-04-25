@@ -35,12 +35,10 @@ class User(Base):
             try:
                 stmt = select(User).where(User.mobile == mobile)
                 result = await s.execute(stmt)
-                cnt = len(result.fetchall())
+                user = result.first()
                 await s.commit()
-                if cnt == 1:
-                    u = User(**result.first().__dict__)
-                    logger.log(u.id)
-                    return 1
+                if user is not None:
+                    return user[0].id
                 else:
                     return 0
             except(DatabaseError, ProgrammingError) as e:

@@ -9,6 +9,12 @@ class Code(IntEnum):
     VER_SMS_CODE_ERROR = 10002,
     # db
     DB_ERROR = 50000
+    # verify
+    TOKEN_ERROR = 50001
+
+
+class LiziBaseModel(BaseModel):
+    user_id: int
 
 
 class SmsRes:
@@ -31,11 +37,9 @@ class LoginRes:
         self.is_new = is_new
 
 
-class ChatSayReq(BaseModel):
-    """
-    聊天接口的请求类
-    """
-    role_id: str
-    content: str
+class EditProfileReq(LiziBaseModel):
+    name: str
+    avatar_url: str
+
 
 
