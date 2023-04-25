@@ -9,7 +9,8 @@ class OpenAIUtil:
     @staticmethod
     def chat(content: str, prompt: str,
              temperature: Union[float, None] = 0.5,
-             n: Union[int, None] = 1, stream: Union[bool, None] = False, chat_history: Union[List[str], None] = None) \
+             n: Union[int, None] = 1, stream: Union[bool, None] = False,
+             chat_history: Union[List[str], None] = None) \
             -> str:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
