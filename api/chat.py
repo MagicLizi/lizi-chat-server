@@ -23,9 +23,7 @@ async def chat_say(req: ChatSayReq):
         return {"code": Code.DB_ERROR, "msg": "系统错误"}
     result = OpenAIUtil.chat(req.content, prompts)
     return {"code": Code.SUCCESS, "data": ChatSayRes(result), "msg": "reply"}
-#
-#
-# @router.get("/history")
-# async def get_chat_history(role_id: int = 0, page_index: int = 0, page_count: Union[int, None] = 20):
-#     return {"role_id": role_id, "page_index": page_index, page_count: page_count}
+
+
+
 
