@@ -60,12 +60,10 @@ async def get_sms_code(sms_req: SmsReq):
         return {"code": Code.DB_ERROR, "msg": "系统错误"}
 
 
-# @router.get("/roles")
-# async def get_roles(page_index: int = 0, page_count: Union[int, None] = 10):
-#     return {"page_index": page_index, "page_count": page_count}
-
-
 @router.post("/edit_profile")
 async def edit_user_profile(edit_req: EditProfileReq):
-
-    return {"code": Code.SUCCESS, "msg": "设置成功"}
+    result = await User.edit_user(edit_req.user_id, edit_req.name, edit_req.avatar_url)
+    if result == 1:
+        return {"code": Code.SUCCESS, "msg": "设置成功"}
+    else:
+        return {"code": Code.DB_ERROR, "msg": "系统错误"}

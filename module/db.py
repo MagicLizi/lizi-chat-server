@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy import select, and_, update, insert
 from sqlalchemy.exc import DatabaseError, ProgrammingError
+from typing import Union
 import os
 import time
 from util.log import logger
@@ -54,6 +55,18 @@ class User(Base):
                 result = await s.execute(stmt)
                 await s.commit()
                 return result.lastrowid
+            except(DatabaseError, ProgrammingError) as e:
+                await s.rollback()
+                return -1
+
+    @staticmethod
+    async def edit_user(user_id: int, name: str, avatar_url: str):
+        async with async_session() as s:
+            try:
+                stmt = update(User).values(id=user_id).values(name=name, avatar_url=avatar_url)
+                await s.execute(stmt)
+                await s.commit()
+                return 1
             except(DatabaseError, ProgrammingError) as e:
                 await s.rollback()
                 return -1
