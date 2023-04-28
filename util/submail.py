@@ -3,7 +3,7 @@ import os
 
 
 app_id = '94524'
-app_key = os.environ['Lizi-Submail-Key']
+app_key = os.environ['Lizi_Submail_Key']
 
 
 class SubmailUtil:

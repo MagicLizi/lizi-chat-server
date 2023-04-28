@@ -7,7 +7,7 @@ from sqlalchemy.exc import DatabaseError, ProgrammingError
 import os
 import time
 
-db_path = os.environ["Lizi-Chat-DB"]
+db_path = os.environ["Lizi_Chat_DB"]
 engine = create_async_engine(db_path,
                              pool_size=20,
                              max_overflow=0)
