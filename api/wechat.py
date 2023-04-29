@@ -39,7 +39,7 @@ async def deal_wechat_msg(request: Request):
 
         current_timestamp = int(time.time())
         create_time = ET.SubElement(root, "CreateTime")
-        create_time.text = current_timestamp
+        create_time.text = f"{current_timestamp}"
 
         msg_type = ET.SubElement(root, "MsgType")
         msg_type.text = "text"
