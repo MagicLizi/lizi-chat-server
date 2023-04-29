@@ -30,3 +30,5 @@ Desktop.ini
 # macOS / OS X files
 .DS_Store
 .AppleDouble
+
+server.log
