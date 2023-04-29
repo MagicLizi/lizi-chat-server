@@ -55,3 +55,10 @@ class ChatSayReq(LiziBaseModel):
 class ChatSayRes:
     def __init__(self, content):
         self.content = content
+
+
+class WeChatVerify(BaseModel):
+    signature: str
+    timestamp: str
+    nonce: str
+    echostr: str
