@@ -10,4 +10,4 @@ async def verify(signature: str, timestamp: int, nonce: str, echostr: str):
     logger.info(f"{timestamp}")
     logger.info(f"{nonce}")
     logger.info(f"{echostr}")
-    return echostr
+    return f"echostr={echostr}"
