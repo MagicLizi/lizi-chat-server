@@ -29,7 +29,7 @@ async def user_verify(request: Request, call_next):
     filter_api_list = [
         "/user/login",
         "/user/sms",
-        "/test/"
+        "/test"
     ]
 
     print(api)
