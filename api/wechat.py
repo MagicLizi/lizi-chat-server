@@ -11,5 +11,6 @@ async def verify_url(signature: str, timestamp: int, nonce: str, echostr: str):
 
 @router.post("/cmd")
 async def deal_wechat_msg(request: Request):
-    logger.info(request.body())
+    body = await request.body()
+    logger.info(body)
 
