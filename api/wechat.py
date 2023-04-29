@@ -39,6 +39,7 @@ async def verify_url(signature: str, timestamp: int, nonce: str, echostr: str):
 async def deal_wechat_msg(request: Request):
     valid_user = ["og8uO6YWYaAORpVxAw0fkMP7X4yY", "og8uO6cdyyIvN7s32EbSJilFirus", "og8uO6RWTp0WxLtIUWlfEsCnfMG0", "og8uO6YqqQnInYlEmu8Gs27aWA_0"]
     body = await request.body()
+    logger.info(body)
     root = ET.fromstring(body)
     to_user_name = root.find('./ToUserName').text
     from_user_name = root.find('./FromUserName').text
