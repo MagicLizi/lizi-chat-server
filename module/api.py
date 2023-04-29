@@ -59,6 +59,6 @@ class ChatSayRes:
 
 class WeChatVerify(BaseModel):
     signature: str
-    timestamp: str
+    timestamp: int
     nonce: str
     echostr: str
