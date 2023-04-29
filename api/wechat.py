@@ -12,17 +12,18 @@ def get_return_str(from_user_name: str, to_user_name: str, content: str):
     # 创建根元素
     root = ET.Element("xml")
     # 创建子元素
-    to_user_name = ET.SubElement(root, "ToUserName")
-    to_user_name.text = from_user_name
-    from_user_name = ET.SubElement(root, "FromUserName")
-    from_user_name.text = to_user_name
+    to_user_name_xml = ET.SubElement(root, "ToUserName")
+    to_user_name_xml.text = from_user_name
+    from_user_name_xml = ET.SubElement(root, "FromUserName")
+    from_user_name_xml.text = to_user_name
     current_timestamp = int(time.time())
     create_time = ET.SubElement(root, "CreateTime")
     create_time.text = f"{current_timestamp}"
     msg_type = ET.SubElement(root, "MsgType")
     msg_type.text = "text"
-    content = ET.SubElement(root, "Content")
-    content.text = content
+
+    content_xml = ET.SubElement(root, "Content")
+    content_xml.text = content
     # 将XML树转换为字符串
     xml_string = ET.tostring(root, encoding="utf-8", method="xml")
     logger.info(xml_string)
