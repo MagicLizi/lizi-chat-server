@@ -32,8 +32,8 @@ async def user_verify(request: Request, call_next):
         "/test/"
     ]
 
+    print(api)
     if api in filter_api_list:
-        print(api)
         return await call_next(request)
     else:
         token = request.headers.get("token")
