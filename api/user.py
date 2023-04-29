@@ -5,7 +5,6 @@ from module.api import SmsReq, SmsRes, Code, LoginReq, LoginRes, EditProfileReq
 from util.submail import SubmailUtil
 import random
 from util.secret import generate_user_token
-from util.log import logger
 router = APIRouter()
 
 

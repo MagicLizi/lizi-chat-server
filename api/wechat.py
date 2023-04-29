@@ -30,6 +30,14 @@ def get_return_str(from_user_name: str, to_user_name: str, content: str):
     return xml_string
 
 
+# async def resp_gpt_msg():
+#     url = 'https://api-v4.mysubmail.com/sms/xsend'
+#     async with aiohttp.ClientSession() as session:
+#         async with session.post(url, json=data) as response:
+#             return await response.json()
+
+
+
 @router.get("/cmd")
 async def verify_url(signature: str, timestamp: int, nonce: str, echostr: str):
     return HTMLResponse(content=echostr)
@@ -39,7 +47,6 @@ async def verify_url(signature: str, timestamp: int, nonce: str, echostr: str):
 async def deal_wechat_msg(request: Request):
     valid_user = ["og8uO6YWYaAORpVxAw0fkMP7X4yY", "og8uO6cdyyIvN7s32EbSJilFirus", "og8uO6RWTp0WxLtIUWlfEsCnfMG0", "og8uO6YqqQnInYlEmu8Gs27aWA_0"]
     body = await request.body()
-    logger.info(body)
     root = ET.fromstring(body)
     to_user_name = root.find('./ToUserName').text
     from_user_name = root.find('./FromUserName').text
@@ -50,6 +57,9 @@ async def deal_wechat_msg(request: Request):
             msg_id = root.find('./MsgId').text
             logger.info(f"用户:{from_user_name}合法, content:{content}")
             r = await OpenAIUtil.chat(content, "")
+            logger.info(f"用户的问题结果为:{r}")
+            ## 通过客服接口回答
+
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, r))
         else:
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))

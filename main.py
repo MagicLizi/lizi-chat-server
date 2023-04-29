@@ -66,3 +66,5 @@ app.include_router(user.router, prefix="/user")
 app.include_router(wechat.router, prefix="/wechat")
 
 
+
+
