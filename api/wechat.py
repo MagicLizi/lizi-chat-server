@@ -47,8 +47,10 @@ async def deal_wechat_msg(request: Request):
     msg_id = root.find('./MsgId').text
     if from_user_name in valid_user:
         logger.info(f"用户:{from_user_name}合法, content:{content}")
+        r = await OpenAIUtil.chat(content, "")
+        logger.log(r)
         return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你好！"))
 
     else:
         logger.info(f"用户:{from_user_name}非法, content:{content}")
-        return get_return_str(from_user_name, to_user_name, "你是非法用户哦！")
+        return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你是非法用户哦！！"))
