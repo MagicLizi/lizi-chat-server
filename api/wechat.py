@@ -54,5 +54,5 @@ async def deal_wechat_msg(request: Request):
         else:
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
     else:
-        # logger.info(f"用户:{from_user_name}非法, content:{content}")
+        logger.info(f"用户:{from_user_name}非法")
         return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你是非法用户哦！！"))
