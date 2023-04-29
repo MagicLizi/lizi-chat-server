@@ -2,8 +2,7 @@ import json
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from api import chat, user, test
-from util.log import logger
+from api import chat, user, test, wechat
 from util.secret import decode_user_token
 from module.api import Code
 from urllib.parse import urlencode, quote
@@ -30,7 +29,8 @@ async def user_verify(request: Request, call_next):
         "/user/login",
         "/user/sms",
         "/test",
-        "/test/"
+        "/test/",
+        "/wechat/verify"
     ]
 
     if api in filter_api_list:
@@ -63,5 +63,6 @@ app.middleware('http')(user_verify)
 app.include_router(test.router, prefix="/test")
 app.include_router(chat.router, prefix="/chat")
 app.include_router(user.router, prefix="/user")
+app.include_router(wechat.router, prefix="/wechat")
 
 
