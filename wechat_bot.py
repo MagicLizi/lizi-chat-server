@@ -29,7 +29,7 @@ def text_reply(msg):
             msg.actualNickName, msg.text))
 
 
-itchat.auto_login(enableCmdQR=True)
+itchat.auto_login(enableCmdQR=2)
 
 itchat.run(True)
 
