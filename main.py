@@ -28,7 +28,8 @@ async def user_verify(request: Request, call_next):
     api = request.url.path
     filter_api_list = [
         "/user/login",
-        "/user/sms"
+        "/user/sms",
+        "/test/"
     ]
 
     if api in filter_api_list:
