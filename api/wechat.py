@@ -37,7 +37,7 @@ async def verify_url(signature: str, timestamp: int, nonce: str, echostr: str):
 
 @router.post("/cmd")
 async def deal_wechat_msg(request: Request):
-    valid_user = ["og8uO6YWYaAORpVxAw0fkMP7X4yY"]
+    valid_user = ["og8uO6YWYaAORpVxAw0fkMP7X4yY", "og8uO6cdyyIvN7s32EbSJilFirus", "og8uO6RWTp0WxLtIUWlfEsCnfMG0"]
     body = await request.body()
     root = ET.fromstring(body)
     to_user_name = root.find('./ToUserName').text
@@ -46,11 +46,12 @@ async def deal_wechat_msg(request: Request):
     content = root.find('./Content').text
     msg_id = root.find('./MsgId').text
     if from_user_name in valid_user:
-        logger.info(f"用户:{from_user_name}合法, content:{content}")
-        r = await OpenAIUtil.chat(content, "")
-        # logger.info(r)
-        return HTMLResponse(content=get_return_str(from_user_name, to_user_name, r))
-
+        if msg_type == "text":
+            logger.info(f"用户:{from_user_name}合法, content:{content}")
+            r = await OpenAIUtil.chat(content, "")
+            return HTMLResponse(content=get_return_str(from_user_name, to_user_name, r))
+        else:
+            return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
     else:
         logger.info(f"用户:{from_user_name}非法, content:{content}")
         return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你是非法用户哦！！"))
