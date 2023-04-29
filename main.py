@@ -30,7 +30,7 @@ async def user_verify(request: Request, call_next):
         "/user/sms",
         "/test",
         "/test/",
-        "/wechat/verify"
+        "/wechat/cmd"
     ]
 
     if api in filter_api_list:
