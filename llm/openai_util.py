@@ -32,11 +32,12 @@ class OpenAIUtil:
                   n: Union[int, None] = 1, stream: Union[bool, None] = False,
                   chat_history: Union[List[str], None] = None) \
             -> str:
-        cur_msg = [
+        messages = [
             {"role": "system", "content": prompt},
             {"role": "user", "content": content}
         ]
-        messages = chat_history + cur_msg
+        if chat_history is not None:
+            messages = chat_history + messages
         logger.info(f"当前发送：{messages}")
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
