@@ -60,6 +60,7 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
         logger.info(f"{user_id} 需要清空聊天记录，已经大于3500了")
         user_chat_history[user_id] = list()
 
+    message_cache[user_msg_id] = -1
     rst = OpenAIUtil.sync_chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id])
     message_cache[user_msg_id] = rst
 
@@ -88,8 +89,11 @@ async def deal_wechat_msg(request: Request):
             user_msg_id = f"{from_user_name}_{msg_id}"
             if user_msg_id in message_cache:
                 rst_content = message_cache[user_msg_id]
-                del message_cache[user_msg_id]
-                return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst_content))
+                if rst_content != -1:
+                    del message_cache[user_msg_id]
+                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst_content))
+                else:
+                    await asyncio.sleep(15)
             else:
                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name))
                 await asyncio.sleep(15)
