@@ -37,15 +37,23 @@ async def verify_url(signature: str, timestamp: int, nonce: str, echostr: str):
 
 
 message_cache = {}
+user_chat_history = {}
 
 
-async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str):
+async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: str):
     rst = OpenAIUtil.sync_chat(content, prompts)
     message_cache[user_msg_id] = rst
+
+    # 保存用户聊天记录
+    if user_id not in user_chat_history:
+        user_chat_history[user_id] = list()
+        user_chat_history[user_id].append({"role": "user", "content": content})
+        user_chat_history[user_id].append({"role": "assistant", "content": content})
 
 
 @router.post("/cmd")
 async def deal_wechat_msg(request: Request):
+    # 先不需要数据库
     valid_user = ["og8uO6YWYaAORpVxAw0fkMP7X4yY",
                   "og8uO6cdyyIvN7s32EbSJilFirus",
                   "og8uO6RWTp0WxLtIUWlfEsCnfMG0",
@@ -65,7 +73,7 @@ async def deal_wechat_msg(request: Request):
                 del message_cache[user_msg_id]
                 return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst_content))
             else:
-                asyncio.create_task(resp_gpt_msg(content, "", user_msg_id))
+                asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name))
                 await asyncio.sleep(6)
         else:
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))

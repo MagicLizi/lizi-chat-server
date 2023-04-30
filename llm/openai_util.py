@@ -1,7 +1,7 @@
 import openai
 import os
 from typing import Union, List
-
+from util.log import logger
 openai.api_key = os.environ["LIZI_OA_KEY"]
 
 
@@ -32,15 +32,18 @@ class OpenAIUtil:
                   n: Union[int, None] = 1, stream: Union[bool, None] = False,
                   chat_history: Union[List[str], None] = None) \
             -> str:
+        cur_msg = [
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": content}
+        ]
+        messages = chat_history + cur_msg
+        logger.info(f"当前发送：{messages}")
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             temperature=temperature,
             n=n,
             stream=stream,
-            messages=[
-                {"role": "system", "content": prompt},
-                {"role": "user", "content": content}
-            ]
+            messages=messages
         )
         assistant_message = response.choices[0].message['content']
         return assistant_message
