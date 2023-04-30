@@ -8,20 +8,24 @@ openai.api_key = os.environ["LIZI_OA_KEY"]
 class OpenAIUtil:
 
     @staticmethod
-    async def chat(content: str, prompt: str,
+    async def chat(content: str, prompts: str,
                    temperature: Union[float, None] = 0.5,
                    n: Union[int, None] = 1, stream: Union[bool, None] = False,
                    chat_history: Union[List[str], None] = None) \
             -> str:
-        response = await openai.ChatCompletion.acreate(
+        messages = [
+            {"role": "system", "content": prompts},
+            {"role": "user", "content": content}
+        ]
+        if chat_history is not None:
+            messages = chat_history + messages
+        logger.info(f"当前发送：{messages}")
+        response = openai.ChatCompletion.acreate(
             model="gpt-3.5-turbo",
             temperature=temperature,
             n=n,
             stream=stream,
-            messages=[
-                {"role": "system", "content": prompt},
-                {"role": "user", "content": content}
-            ]
+            messages=messages
         )
         assistant_message = response.choices[0].message['content']
         return assistant_message
