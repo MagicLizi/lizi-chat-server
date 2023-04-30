@@ -8,6 +8,7 @@ from module.api import Code
 from urllib.parse import urlencode, quote
 app = FastAPI()
 
+
 async def set_body(request: Request, body: bytes):
     async def receive():
         return {"type": "http.request", "body": body}

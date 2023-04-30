@@ -21,7 +21,8 @@ class OpenAIUtil:
             messages = chat_history + messages
         logger.info(f"当前发送：{messages}")
         response = await openai.ChatCompletion.acreate(
-            model="gpt-3.5-turbo",
+            ## model="gpt-3.5-turbo",
+            model="gpt-4",
             temperature=temperature,
             n=n,
             stream=stream,
