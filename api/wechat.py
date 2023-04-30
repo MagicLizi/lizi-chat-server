@@ -98,7 +98,13 @@ async def deal_wechat_msg(request: Request):
             match = re.search(pattern, content)
             if match:
                 tmp_user_msg_id = match.group(1)
-                print(tmp_user_msg_id)
+                if tmp_user_msg_id in message_cache:
+                    rst = message_cache[tmp_user_msg_id]
+                    del message_cache[tmp_user_msg_id]
+                    del message_cache_try_cnt[tmp_user_msg_id]
+                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
+                else:
+                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, f"{tmp_user_msg_id} 不存在，或者GPT还在应答中，可以等30s在尝试"))
 
             if user_msg_id not in message_cache_try_cnt:
                 message_cache_try_cnt[user_msg_id] = 1
