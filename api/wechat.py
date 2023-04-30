@@ -50,7 +50,7 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
     cur_length = 0
     enc = tiktoken.get_encoding("cl100k_base")
     for msg in user_chat_history[user_id]:
-        logger.info(msg.content)
+        logger.info(msg['content'])
 
     rst = OpenAIUtil.sync_chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id])
     message_cache[user_msg_id] = rst
