@@ -28,7 +28,6 @@ def get_return_str(from_user_name: str, to_user_name: str, content: str):
     content_xml.text = content
     # 将XML树转换为字符串
     xml_string = ET.tostring(root, encoding="utf-8", method="xml")
-    logger.info(xml_string)
     return xml_string
 
 
@@ -58,7 +57,7 @@ async def deal_wechat_msg(request: Request):
             content = root.find('./Content').text
             msg_id = root.find('./MsgId').text
             asyncio.create_task(resp_gpt_msg(content, "", f"{from_user_name}_{msg_id}"))
-            rst_content = "success"
+            rst_content = ""
             if msg_id in message_cache:
                 rst_content = message_cache[msg_id]
 
