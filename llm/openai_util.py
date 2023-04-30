@@ -27,13 +27,13 @@ class OpenAIUtil:
         return assistant_message
 
     @staticmethod
-    def sync_chat(content: str, prompt: str,
+    def sync_chat(content: str, prompts: str,
                   temperature: Union[float, None] = 0.5,
                   n: Union[int, None] = 1, stream: Union[bool, None] = False,
                   chat_history: Union[List[str], None] = None) \
             -> str:
         messages = [
-            {"role": "system", "content": prompt},
+            {"role": "system", "content": prompts},
             {"role": "user", "content": content}
         ]
         if chat_history is not None:
