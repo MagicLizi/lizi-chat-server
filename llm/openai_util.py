@@ -27,7 +27,6 @@ class OpenAIUtil:
             stream=stream,
             messages=messages
         )
-        logger.info(response)
         assistant_message = response.choices[0].message['content']
         return assistant_message
 
