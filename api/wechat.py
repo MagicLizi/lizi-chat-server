@@ -63,11 +63,8 @@ async def deal_wechat_msg(request: Request):
                 logger.info(message_cache)
                 rst_content = message_cache[user_msg_id]
                 return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst_content))
-
-            # logger.info(f"用户:{from_user_name}合法, content:{content}")
-            # r = await OpenAIUtil.chat(content, "")
-            # logger.info(f"用户的问题结果为:{r}")
-
+            else:
+                await asyncio.sleep(6)
         else:
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
     else:
