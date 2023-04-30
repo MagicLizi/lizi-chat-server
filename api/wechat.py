@@ -79,7 +79,8 @@ async def deal_wechat_msg(request: Request):
                   "og8uO6YqqQnInYlEmu8Gs27aWA_0",
                   "og8uO6eM7aKgmcMqqBdlhCzxAybk",
                   "og8uO6ZfDYWQ4T82p0DPhIVZMJNk",
-                  "og8uO6dMCU-q3JgitiXUKMNnWWq0"]
+                  "og8uO6dMCU-q3JgitiXUKMNnWWq0",
+                  "og8uO6UarTsKe16IG9wbtvEaVLF0"]
     body = await request.body()
     root = ET.fromstring(body)
     to_user_name = root.find('./ToUserName').text
