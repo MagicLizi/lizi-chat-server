@@ -58,8 +58,8 @@ async def deal_wechat_msg(request: Request):
             msg_id = root.find('./MsgId').text
             user_msg_id = f"{from_user_name}_{msg_id}"
             if user_msg_id in message_cache:
-                logger.info(message_cache)
                 rst_content = message_cache[user_msg_id]
+                del message_cache[user_msg_id]
                 return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst_content))
             else:
                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id))
