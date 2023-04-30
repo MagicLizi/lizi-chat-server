@@ -101,7 +101,7 @@ async def deal_wechat_msg(request: Request):
                         return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "GPT超时了！优化中..."))
             else:
                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name))
-                await asyncio.sleep(100)
+                await asyncio.sleep(20)
         else:
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
     else:
