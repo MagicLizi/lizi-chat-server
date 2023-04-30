@@ -77,7 +77,8 @@ async def deal_wechat_msg(request: Request):
                   "og8uO6cdyyIvN7s32EbSJilFirus",
                   "og8uO6RWTp0WxLtIUWlfEsCnfMG0",
                   "og8uO6YqqQnInYlEmu8Gs27aWA_0",
-                  "og8uO6eM7aKgmcMqqBdlhCzxAybk"]
+                  "og8uO6eM7aKgmcMqqBdlhCzxAybk",
+                  "og8uO6ZfDYWQ4T82p0DPhIVZMJNk"]
     body = await request.body()
     root = ET.fromstring(body)
     to_user_name = root.find('./ToUserName').text
@@ -140,7 +141,7 @@ async def deal_wechat_msg(request: Request):
                     del message_cache_try_cnt[user_msg_id]
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
                 else:
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, f"GPT超时-我想想有啥办法 - msg_id:{user_msg_id}"))
+                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, f"GPT超时-你可以 - msg_id:{user_msg_id}"))
 
         else:
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
