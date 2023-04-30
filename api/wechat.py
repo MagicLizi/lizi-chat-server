@@ -6,7 +6,7 @@ from util.log import logger
 import xml.etree.ElementTree as ET
 import time
 import tiktoken
-import
+import re
 from llm.openai_util import OpenAIUtil
 
 router = APIRouter()
