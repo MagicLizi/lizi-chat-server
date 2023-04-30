@@ -61,7 +61,7 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
         logger.info(f"{user_id} 需要清空聊天记录，已经大于3500了")
         user_chat_history[user_id] = list()
 
-    rst = OpenAIUtil.sync_chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id])
+    rst = await OpenAIUtil.chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id])
     message_cache[user_msg_id] = rst
 
     # 保存用户聊天记录
