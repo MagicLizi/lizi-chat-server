@@ -62,6 +62,7 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
         user_chat_history[user_id] = list()
 
     rst = await OpenAIUtil.chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id])
+    logger.info(f"{user_msg_id} 返回:{rst}")
     message_cache[user_msg_id] = rst
 
     # 保存用户聊天记录
