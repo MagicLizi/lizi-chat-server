@@ -93,7 +93,7 @@ async def deal_wechat_msg(request: Request):
                     del message_cache[user_msg_id]
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst_content))
                 else:
-                    await asyncio.sleep(5)
+                    await asyncio.sleep(3)
                     last_rst_content = message_cache[user_msg_id]
                     if last_rst_content != -1:
                         return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst_content))
