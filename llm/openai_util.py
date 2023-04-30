@@ -20,7 +20,7 @@ class OpenAIUtil:
         if chat_history is not None:
             messages = chat_history + messages
         logger.info(f"当前发送：{messages}")
-        response = openai.ChatCompletion.acreate(
+        response = await openai.ChatCompletion.acreate(
             model="gpt-3.5-turbo",
             temperature=temperature,
             n=n,
