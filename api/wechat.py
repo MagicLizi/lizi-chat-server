@@ -54,6 +54,8 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
         rst_length = len(enc_rst)
         cur_length = cur_length + rst_length
 
+    logger.info(f"{user_id} 当前聊天记录Token长度:{cur_length}")
+
     if cur_length >= 3500:
         logger.info(f"{user_id} 需要清空聊天记录，已经大于3500了")
         user_chat_history[user_id] = list()
