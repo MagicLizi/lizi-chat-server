@@ -45,12 +45,12 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
     if user_id not in user_chat_history:
         user_chat_history[user_id] = list()
 
-    rst = OpenAIUtil.sync_chat(content=content,prompts=prompts,chat_history=user_chat_history[user_id])
+    rst = OpenAIUtil.sync_chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id])
     message_cache[user_msg_id] = rst
 
     # 保存用户聊天记录
     user_chat_history[user_id].append({"role": "user", "content": content})
-    user_chat_history[user_id].append({"role": "assistant", "content": content})
+    user_chat_history[user_id].append({"role": "assistant", "content": rst})
 
 
 @router.post("/cmd")
