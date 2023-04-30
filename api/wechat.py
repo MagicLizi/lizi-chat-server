@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from util.log import logger
@@ -30,7 +32,6 @@ def get_return_str(from_user_name: str, to_user_name: str, content: str):
     return xml_string
 
 
-
 @router.get("/cmd")
 async def verify_url(signature: str, timestamp: int, nonce: str, echostr: str):
     return HTMLResponse(content=echostr)
@@ -39,8 +40,8 @@ async def verify_url(signature: str, timestamp: int, nonce: str, echostr: str):
 message_cache = {}
 
 
-def resp_gpt_msg(content: str, prompts: str, user_msg_id: str):
-    rst = await OpenAIUtil.chat(content, "")
+async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str):
+    rst = OpenAIUtil.sync_chat(content, "")
     logger.info(f"用户:{user_msg_id}合法, content:{rst}")
 
 
@@ -56,7 +57,7 @@ async def deal_wechat_msg(request: Request):
         if msg_type == "text":
             content = root.find('./Content').text
             msg_id = root.find('./MsgId').text
-            resp_gpt_msg(content, "", f"{from_user_name}_{msg_id}")
+            asyncio.create_task(resp_gpt_msg(content, "", f"{from_user_name}_{msg_id}"))
             rst_content = "success"
             if msg_id in message_cache:
                 rst_content = message_cache[msg_id]
