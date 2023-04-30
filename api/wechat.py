@@ -89,13 +89,14 @@ async def deal_wechat_msg(request: Request):
 
             # 判断msg_id 是不是重试
             user_msg_id = f"{from_user_name}_{msg_id}"
-            cur_try_cnt = 0
+
             if user_msg_id not in message_cache_try_cnt:
                 message_cache_try_cnt[user_msg_id] = 1
 
             else:
                 message_cache_try_cnt[user_msg_id] = message_cache_try_cnt[user_msg_id] + 1
 
+            cur_try_cnt = message_cache_try_cnt[user_msg_id]
             logger.info(f'{user_msg_id} 当前尝试次数:{cur_try_cnt}')
             if cur_try_cnt == 1:
                 # 只有第一次需要发送请求,4s内有返回则返回，没有则等待重试
