@@ -142,7 +142,7 @@ async def deal_wechat_msg(request: Request):
                     del message_cache_try_cnt[user_msg_id]
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
                 else:
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, f"GPT超时-你可以 - msg_id:{user_msg_id}"))
+                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, f"GPT超时-你可以尝试直接发送后面括号中的内容查询结果 (msg_id:{user_msg_id})"))
 
         else:
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
