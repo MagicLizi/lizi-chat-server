@@ -46,7 +46,11 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str):
 
 @router.post("/cmd")
 async def deal_wechat_msg(request: Request):
-    valid_user = ["og8uO6YWYaAORpVxAw0fkMP7X4yY", "og8uO6cdyyIvN7s32EbSJilFirus", "og8uO6RWTp0WxLtIUWlfEsCnfMG0", "og8uO6YqqQnInYlEmu8Gs27aWA_0"]
+    valid_user = ["og8uO6YWYaAORpVxAw0fkMP7X4yY",
+                  "og8uO6cdyyIvN7s32EbSJilFirus",
+                  "og8uO6RWTp0WxLtIUWlfEsCnfMG0",
+                  "og8uO6YqqQnInYlEmu8Gs27aWA_0",
+                  "og8uO6ZfDYWQ4T82p0DPhIVZMJNk"]
     body = await request.body()
     root = ET.fromstring(body)
     to_user_name = root.find('./ToUserName').text
@@ -68,4 +72,4 @@ async def deal_wechat_msg(request: Request):
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
     else:
         logger.info(f"用户:{from_user_name}非法")
-        return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你是非法用户哦！！"))
+        return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你是非法用户哦！！找Lizi！！如果你不认识她，就算了！"))
