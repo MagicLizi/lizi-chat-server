@@ -40,7 +40,8 @@ message_cache = {}
 
 
 async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str):
-    rst = OpenAIUtil.sync_chat(content, "")
+    rst = OpenAIUtil.sync_chat(content, prompts)
+    message_cache[user_msg_id] = rst
     logger.info(f"用户:{user_msg_id}合法, content:{rst}")
 
 
@@ -56,16 +57,17 @@ async def deal_wechat_msg(request: Request):
         if msg_type == "text":
             content = root.find('./Content').text
             msg_id = root.find('./MsgId').text
-            asyncio.create_task(resp_gpt_msg(content, "", f"{from_user_name}_{msg_id}"))
-            rst_content = ""
-            if msg_id in message_cache:
-                rst_content = message_cache[msg_id]
+            user_msg_id = f"{from_user_name}_{msg_id}"
+            asyncio.create_task(resp_gpt_msg(content, "", user_msg_id))
+            if user_msg_id in message_cache:
+                rst_content = message_cache[user_msg_id]
+                return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst_content))
 
             # logger.info(f"用户:{from_user_name}合法, content:{content}")
             # r = await OpenAIUtil.chat(content, "")
             # logger.info(f"用户的问题结果为:{r}")
 
-            return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst_content))
+
         else:
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
     else:
