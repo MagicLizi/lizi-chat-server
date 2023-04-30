@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse
 from util.log import logger
 import xml.etree.ElementTree as ET
 import time
+import tiktoken
 from llm.openai_util import OpenAIUtil
 
 router = APIRouter()
@@ -44,6 +45,12 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
 
     if user_id not in user_chat_history:
         user_chat_history[user_id] = list()
+
+    # 计算token数量
+    cur_length = 0
+    enc = tiktoken.get_encoding("cl100k_base")
+    for msg in user_chat_history[user_id]:
+        logger.info(enc.encode(msg.content))
 
     rst = OpenAIUtil.sync_chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id])
     message_cache[user_msg_id] = rst
