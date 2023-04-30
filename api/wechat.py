@@ -93,10 +93,15 @@ async def deal_wechat_msg(request: Request):
                     del message_cache[user_msg_id]
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst_content))
                 else:
-                    await asyncio.sleep(15)
+                    await asyncio.sleep(5)
+                    last_rst_content = message_cache[user_msg_id]
+                    if last_rst_content != -1:
+                        return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst_content))
+                    else:
+                        return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "GPT超时了！优化中..."))
             else:
                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name))
-                await asyncio.sleep(15)
+                await asyncio.sleep(5)
         else:
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
     else:
