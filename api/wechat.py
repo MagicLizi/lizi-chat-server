@@ -1,5 +1,4 @@
 import asyncio
-import re
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from util.log import logger
@@ -95,11 +94,11 @@ async def deal_wechat_msg(request: Request):
             user_msg_id = f"{from_user_name}_{msg_id}"
 
             # 先判断是不是缓存命令
-            pattern = r"msg_id:{(\w+)}"
+            pattern = r'msg_id:(\w+)'
             match = re.search(pattern, content)
             if match:
                 tmp_user_msg_id = match.group(1)
-                logger.info(tmp_user_msg_id)
+                print(tmp_user_msg_id)
 
             if user_msg_id not in message_cache_try_cnt:
                 message_cache_try_cnt[user_msg_id] = 1

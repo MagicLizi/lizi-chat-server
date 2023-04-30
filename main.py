@@ -8,7 +8,6 @@ from module.api import Code
 from urllib.parse import urlencode, quote
 app = FastAPI()
 
-
 async def set_body(request: Request, body: bytes):
     async def receive():
         return {"type": "http.request", "body": body}
@@ -64,7 +63,6 @@ app.include_router(test.router, prefix="/test")
 app.include_router(chat.router, prefix="/chat")
 app.include_router(user.router, prefix="/user")
 app.include_router(wechat.router, prefix="/wechat")
-
 
 
 
