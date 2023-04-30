@@ -108,7 +108,7 @@ async def deal_wechat_msg(request: Request):
                     del message_cache_try_cnt[user_msg_id]
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
                 else:
-                    await asyncio.sleep(20)
+                    # await asyncio.sleep(20)
             elif cur_try_cnt == 2:
                 # 第二次只需要获取就行
                 if user_msg_id in message_cache:
@@ -124,7 +124,7 @@ async def deal_wechat_msg(request: Request):
                     del message_cache_try_cnt[user_msg_id]
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
                 else:
-                    await asyncio.sleep(20)
+                    # await asyncio.sleep(20)
             elif cur_try_cnt == 3:
                 if user_msg_id in message_cache:
                     rst = message_cache[user_msg_id]
