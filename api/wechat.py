@@ -1,11 +1,12 @@
 import asyncio
-
+import re
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from util.log import logger
 import xml.etree.ElementTree as ET
 import time
 import tiktoken
+import
 from llm.openai_util import OpenAIUtil
 
 router = APIRouter()
@@ -93,6 +94,13 @@ async def deal_wechat_msg(request: Request):
             # 判断msg_id 是不是重试
             user_msg_id = f"{from_user_name}_{msg_id}"
 
+            # 先判断是不是缓存命令
+            pattern = r"msg_id:{(\w+)}"
+            match = re.search(pattern, content)
+            if match:
+                tmp_user_msg_id = match.group(1)
+                logger.info(tmp_user_msg_id)
+
             if user_msg_id not in message_cache_try_cnt:
                 message_cache_try_cnt[user_msg_id] = 1
 
@@ -142,7 +150,7 @@ async def deal_wechat_msg(request: Request):
                     del message_cache_try_cnt[user_msg_id]
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
                 else:
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, f"GPT超时-你可以尝试直接发送后面括号中的内容查询结果 (msg_id:{user_msg_id})"))
+                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, f"GPT超时-你可以尝试直接发送后面括号中的内容(不包括括号)查询结果 (msg_id:{user_msg_id})"))
 
         else:
             return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
