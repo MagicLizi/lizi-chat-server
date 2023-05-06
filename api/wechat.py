@@ -33,6 +33,7 @@ def get_return_str(from_user_name: str, to_user_name: str, content: str):
 
     content_xml = ET.SubElement(root, "Content")
     content_xml.text = content
+    print(content)
     # 将XML树转换为字符串
     xml_string = ET.tostring(root, encoding="utf-8", method="xml")
     print(xml_string)
