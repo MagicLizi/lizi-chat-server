@@ -232,6 +232,8 @@ async def try_pay(request: Request):
     rst = await wechat_pre_order(request.query_params["open_id"])
     if rst is not None:
         print(rst)
+        s = "ada{}"
+        ss = s.format("dsa")
         html_content = """
             <!DOCTYPE html>
                 <html>
@@ -244,11 +246,11 @@ async def try_pay(request: Request):
                         function pay() {
                             // 调用微信支付接口
                             wx.chooseWXPay({
-                                timestamp: {},
-                                nonceStr: {},
-                                package: {},
+                                timestamp: $timestamp,
+                                nonceStr: $nonceStr,
+                                package: $package,
                                 signType: 'MD5',
-                                paySign: {},
+                                paySign: $paySign,
                                 success: function (res) {
                                     // 支付成功后的回调函数
                                     alert('支付成功');
@@ -273,5 +275,8 @@ async def try_pay(request: Request):
         print(rst['nonceStr'])
         print(rst['package'])
         print(rst['paySign'])
-        html_content_last = html_content.format(rst['timeStamp'], rst['nonceStr'], rst['package'], rst['paySign'])
+        html_content_last = html_content.replace("$timestamp", rst['timeStamp'])
+        html_content_last = html_content_last.replace("$nonceStr", rst['nonceStr'])
+        html_content_last = html_content_last.replace("$package", rst['package'])
+        html_content_last = html_content_last.replace("$paySign", rst['paySign'])
         return HTMLResponse(content=html_content_last)
