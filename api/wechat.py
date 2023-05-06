@@ -198,7 +198,7 @@ async def wechat_pre_order(open_id):
         partner_mode=False,
         proxy=None)
 
-    out_trade_no = '1217752501201407033233368318'
+    out_trade_no = '1217752501201407033233368312'
     description = '测试商品'
     amount = 1
     code, message = wxpay.pay(
@@ -209,6 +209,8 @@ async def wechat_pre_order(open_id):
         payer={'openid': open_id}
     )
     result = json.loads(message)
+    print(code)
+    print(result)
     if code in range(200, 300):
         prepay_id = result.get('prepay_id')
         timestamp = str(int(time.time()))
