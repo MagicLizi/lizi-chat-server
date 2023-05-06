@@ -5,7 +5,9 @@ from util.log import logger
 import xml.etree.ElementTree as ET
 import time
 import tiktoken
-import re
+import aiohttp
+from urllib.parse import urlencode
+import os
 from llm.openai_util import OpenAIUtil
 
 router = APIRouter()
@@ -43,7 +45,6 @@ user_chat_history = {}
 
 
 async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: str):
-
     if user_id not in user_chat_history:
         user_chat_history[user_id] = list()
 
@@ -70,102 +71,35 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
     user_chat_history[user_id].append({"role": "assistant", "content": rst})
 
 
+access_token = None
+
+async def get_access_token():
+    app_id = os.environ['WX_APPID']
+    app_key = os.environ['WX_APP_SECRECT']
+    params = {'grant_type': 'client_credential',
+              'appid': app_id,
+              'secret': app_key}
+    url = f'https://api.weixin.qq.com/cgi-bin/token?{urlencode(params)}'
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            print(await response.text())
+
+
 @router.post("/cmd")
 async def deal_wechat_msg(request: Request):
     # 先不需要数据库
-    valid_user = ["og8uO6YWYaAORpVxAw0fkMP7X4yY",
-                  "og8uO6cdyyIvN7s32EbSJilFirus",
-                  "og8uO6RWTp0WxLtIUWlfEsCnfMG0",
-                  "og8uO6YqqQnInYlEmu8Gs27aWA_0",
-                  "og8uO6eM7aKgmcMqqBdlhCzxAybk",
-                  "og8uO6ZfDYWQ4T82p0DPhIVZMJNk",
-                  "og8uO6dMCU-q3JgitiXUKMNnWWq0",
-                  "og8uO6UarTsKe16IG9wbtvEaVLF0",
-                  "og8uO6T8ylWQcm9Vc3w5gE4KY6Uc",
-                  "og8uO6eLR5fm3AeSKQclyAZhXQ_U"]
+    valid_user = ["ocZ6M5sE2AdKmvzd40GQ2fyKVZMU"]
     body = await request.body()
     root = ET.fromstring(body)
     to_user_name = root.find('./ToUserName').text
     from_user_name = root.find('./FromUserName').text
     msg_type = root.find('./MsgType').text
     if from_user_name in valid_user:
-        if msg_type == "text":
-            content = root.find('./Content').text
-            msg_id = root.find('./MsgId').text
-
-            # 判断msg_id 是不是重试
-            user_msg_id = f"{from_user_name}_{msg_id}"
-
-            # 先判断是不是缓存命令
-            pattern = r'msg_id:(\w+)'
-            match = re.search(pattern, content)
-            if match:
-                tmp_user_msg_id = match.group(1)
-                if tmp_user_msg_id in message_cache:
-                    rst = message_cache[tmp_user_msg_id]
-                    del message_cache[tmp_user_msg_id]
-                    del message_cache_try_cnt[tmp_user_msg_id]
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
-                else:
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, f"{tmp_user_msg_id} 不存在，或者GPT还在应答中，可以等30s在尝试"))
-
-            if user_msg_id not in message_cache_try_cnt:
-                message_cache_try_cnt[user_msg_id] = 1
-
-            else:
-                message_cache_try_cnt[user_msg_id] = message_cache_try_cnt[user_msg_id] + 1
-
-            cur_try_cnt = message_cache_try_cnt[user_msg_id]
-            logger.info(f'{user_msg_id} 当前尝试次数:{cur_try_cnt}')
-            if cur_try_cnt == 1:
-                # 只有第一次需要发送请求,4s内有返回则返回，没有则等待重试
-                asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name))
-                await asyncio.sleep(4.5)
-                if user_msg_id in message_cache:
-                    rst = message_cache[user_msg_id]
-                    del message_cache[user_msg_id]
-                    del message_cache_try_cnt[user_msg_id]
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
-                else:
-                    await asyncio.sleep(20)
-            elif cur_try_cnt == 2:
-                # 第二次只需要获取就行
-                if user_msg_id in message_cache:
-                    rst = message_cache[user_msg_id]
-                    del message_cache[user_msg_id]
-                    del message_cache_try_cnt[user_msg_id]
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
-                await asyncio.sleep(4.5)
-                # 4.5后再尝试获取一次
-                if user_msg_id in message_cache:
-                    rst = message_cache[user_msg_id]
-                    del message_cache[user_msg_id]
-                    del message_cache_try_cnt[user_msg_id]
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
-                else:
-                    await asyncio.sleep(20)
-            elif cur_try_cnt == 3:
-                if user_msg_id in message_cache:
-                    rst = message_cache[user_msg_id]
-                    del message_cache[user_msg_id]
-                    del message_cache_try_cnt[user_msg_id]
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
-                await asyncio.sleep(4.5)
-                # 4.5后再尝试获取一次，如果没有则返回报错
-                if user_msg_id in message_cache:
-                    rst = message_cache[user_msg_id]
-                    del message_cache[user_msg_id]
-                    del message_cache_try_cnt[user_msg_id]
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, rst))
-                else:
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, f"GPT"
-                                                                                             f"超时-你可以尝试直接发送后面括号中的内容("
-                                                                                             f"不包括括号)查询结果（最好等个30s-1"
-                                                                                             f"分钟） (msg_id:"
-                                                                                             f"{user_msg_id})"))
-
-        else:
-            return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
+        if access_token is None:
+            # 获取 Access_Token
+            await get_access_token()
+        pass
     else:
         logger.info(f"用户:{from_user_name}非法")
-        return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "你是非法用户哦！！找Lizi！！如果你不认识她，就算了！"))
+        return HTMLResponse(
+            content=get_return_str(from_user_name, to_user_name, "你是非法用户哦！！找Lizi！！如果你不认识她，就算了！"))
