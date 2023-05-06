@@ -71,26 +71,38 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
     user_chat_history[user_id].append({"role": "assistant", "content": rst})
 
 
-access_token = None
+token_dic = None
 
 
 async def get_access_token():
-    app_id = os.environ['WX_APPID']
-    app_key = os.environ['WX_APP_SECRECT']
-    params = {'grant_type': 'client_credential',
-              'appid': app_id,
-              'secret': app_key}
-    url = f'https://api.weixin.qq.com/cgi-bin/token?{urlencode(params)}'
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            res = await response.json()
-            print(res)
-            if 'access_token' in res:
-                access_token = {
-                    "value": res['access_token'],
-                    "expires": int(time.time()) + res['expires_in']
-                }
-                print(access_token)
+    need_new = False
+    if token_dic is None:
+        need_new = True
+    else:
+        e_time = token_dic['expires']
+        c_time = int(time.time())
+        if c_time - 100 > e_time:
+            need_new = True
+    if need_new:
+        app_id = os.environ['WX_APPID']
+        app_key = os.environ['WX_APP_SECRECT']
+        params = {'grant_type': 'client_credential',
+                  'appid': app_id,
+                  'secret': app_key}
+        url = f'https://api.weixin.qq.com/cgi-bin/token?{urlencode(params)}'
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                res = await response.json()
+                if 'access_token' in res:
+                    token_dic = {
+                        "value": res['access_token'],
+                        "expires": int(time.time()) + res['expires_in']
+                    }
+                    return token_dic.value
+                else:
+                    return -1
+    else:
+        return token_dic["access_token"]
 
 
 @router.post("/cmd")
@@ -103,10 +115,9 @@ async def deal_wechat_msg(request: Request):
     from_user_name = root.find('./FromUserName').text
     msg_type = root.find('./MsgType').text
     if from_user_name in valid_user:
-        if access_token is None:
-            # 获取 Access_Token
-            await get_access_token()
-        pass
+        token = await get_access_token()
+        if token!= -1:
+            print(token)
     else:
         logger.info(f"用户:{from_user_name}非法")
         return HTMLResponse(
