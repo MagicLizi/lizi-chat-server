@@ -89,7 +89,7 @@ async def send_custom_msg(token, open_id, msg):
                 "content": msg
             }
     }
-    json_data = json.dumps(data)
+    json_data = json.dumps(data, ensure_ascii=False)
     async with aiohttp.ClientSession() as session:
         async with session.post(url, data=json_data) as response:
             return await response.json()
