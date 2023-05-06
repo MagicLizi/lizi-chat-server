@@ -170,7 +170,8 @@ async def deal_wechat_msg(request: Request):
 
 
 async def wechat_pre_order(open_id):
-    params = {'appid': 'wxe0768b96f150e55a',
+    print(open_id)
+    data = {'appid': 'wxe0768b96f150e55a',
               'mchid': '1643876096',
               'description': '测试商品',
               'out_trade_no': 'xxxxx',
@@ -183,22 +184,17 @@ async def wechat_pre_order(open_id):
                   "openid": open_id
               }}
     url = f"https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi"
-    # data = {
-    #     "touser": open_id,
-    #     "msgtype": "text",
-    #     "text":
-    #         {
-    #             "content": msg
-    #         }
-    # }
-    # json_data = json.dumps(data, ensure_ascii=False)
-    # async with aiohttp.ClientSession() as session:
-    #     async with session.post(url, data=json_data) as response:
-    #         return await response.json()
+    json_data = json.dumps(data, ensure_ascii=False)
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, data=json_data) as response:
+            return await response.json()
 
 
 @router.get("/pay")
 async def try_pay(request: Request):
+
+    rst = await wechat_pre_order(request.query_params["open_id"])
+    print(rst)
     return HTMLResponse(content="""
     <!DOCTYPE html>
         <html>
