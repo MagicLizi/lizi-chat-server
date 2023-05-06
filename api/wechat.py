@@ -80,6 +80,7 @@ async def get_access_token():
     c_time = int(time.time())
 
     if c_time - 100 > e_time:
+        print("need new token")
         need_new = True
 
     if need_new:
@@ -99,7 +100,7 @@ async def get_access_token():
                 else:
                     return -1
     else:
-        return token_dic["access_token"]
+        return token_dic["value"]
 
 
 @router.post("/cmd")
