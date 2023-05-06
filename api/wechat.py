@@ -171,7 +171,7 @@ async def deal_wechat_msg(request: Request):
 
 
 async def wechat_pre_order(open_id):
-    with open('../cert/apiclient_key.pem') as f:
+    with open('~/cert/apiclient_key.pem') as f:
         private_key = f.read()
         print(private_key)
 
