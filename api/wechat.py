@@ -209,8 +209,9 @@ async def try_pay(request: Request):
             });
         }
         window.onload = function() {
-   pay();
-  };
+            alert("123")
+            pay();
+        };
     </script>
 </head>
 </html>
