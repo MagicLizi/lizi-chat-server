@@ -73,6 +73,7 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
 
 access_token = None
 
+
 async def get_access_token():
     app_id = os.environ['WX_APPID']
     app_key = os.environ['WX_APP_SECRECT']
@@ -82,7 +83,13 @@ async def get_access_token():
     url = f'https://api.weixin.qq.com/cgi-bin/token?{urlencode(params)}'
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
-            print(await response.text())
+            res = await response.json()
+            if 'access_token' in res:
+                access_token = {
+                    "value": res['access_token'],
+                    "expires": int(time.time()) + res['expires_in']
+                }
+                print(access_token)
 
 
 @router.post("/cmd")
