@@ -208,10 +208,10 @@ async def try_pay(request: Request):
                 }
             });
         }
+        window.onload = function() {
+   pay();
+  };
     </script>
 </head>
-<body>
-    <button onclick="pay()">微信支付</button>
-</body>
 </html>
     """)
