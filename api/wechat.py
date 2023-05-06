@@ -74,11 +74,26 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
     user_chat_history[user_id].append({"role": "assistant", "content": rst})
 
 
+async def send_custom_msg(token,open_id, msg):
+    params = {'access_token': token}
+    url = f"https://api.weixin.qq.com/cgi-bin/message/custom/send?{urlencode(params)}"
+    data = {
+        "touser":open_id,
+        "msgtype":"text",
+        "text":
+        {
+             "content":msg
+        }
+    }
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, json=data) as response:
+            return await response.json()
+
+
 async def get_user_info(token, openid):
     params = {'access_token': token,
               'openid': openid}
     url = f"https://api.weixin.qq.com/cgi-bin/user/info?{urlencode(params)}"
-    print(url)
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             res = await response.json()
@@ -125,8 +140,15 @@ async def deal_wechat_msg(request: Request):
     if from_user_name in valid_user:
         token = await get_access_token()
         if token != -1:
-            user = await get_user_info(token, from_user_name)
-            print(user)
+            if msg_type == "text":
+                await send_custom_msg(token, from_user_name, "测试")
+            else:
+                return HTMLResponse(
+                    content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
+        else:
+            return HTMLResponse(
+                content=get_return_str(from_user_name, to_user_name, "系统错误！！"))
+
     else:
         logger.info(f"用户:{from_user_name}非法")
         return HTMLResponse(
