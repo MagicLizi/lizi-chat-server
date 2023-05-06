@@ -256,6 +256,21 @@ async def try_pay(request: Request):
                         function pay(){
                             alert("trypay")
                             // 调用微信支付接口
+                            wx.chooseWXPay({
+                                timestamp: "$timestamp",
+                                nonceStr: "$nonceStr",
+                                package: "$package",
+                                signType: "$signType",
+                                paySign: "$paySign",
+                                success: function (res) {
+                                    // 支付成功后的回调函数
+                                    alert('支付成功');
+                                },
+                                fail: function (res) {
+                                    // 支付失败后的回调函数
+                                    alert('支付失败');
+                                }
+                            });
                         }
                     </script>
                 </head>
