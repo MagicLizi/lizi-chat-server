@@ -176,7 +176,7 @@ async def wechat_pre_order(open_id):
     file_path = os.path.join(current_dir, 'cert/apiclient_key.pem')
     with open(file_path) as f:
         private_key = f.read()
-        print(private_key)
+        # print(private_key)
 
     serial_id = "4AE288AFED34296BEF1394917537DA9B34B3B788"
     api_v3_key = "emha49esGph4CJcYQhHxFEYYwdr7paBg"
@@ -200,14 +200,14 @@ async def wechat_pre_order(open_id):
     out_trade_no = '1217752501201407033233368318'
     description = '测试商品'
     amount = 1
-    code, result = wxpay.pay(
+    code, message = wxpay.pay(
         description=description,
         out_trade_no=out_trade_no,
         amount={'total': amount},
         pay_type=WeChatPayType.JSAPI,
         payer={'openid': open_id}
     )
-    print(result)
+    result = json.loads(message)
     if code in range(200, 300):
         prepay_id = result.get('prepay_id')
         timestamp = str(int(time.time()))
