@@ -47,7 +47,8 @@ token_dic = {
     "expires": 0
 }
 
-async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: str):
+
+async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: str, token, from_user_name):
     if user_id not in user_chat_history:
         user_chat_history[user_id] = list()
 
@@ -72,6 +73,8 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
     # 保存用户聊天记录
     user_chat_history[user_id].append({"role": "user", "content": content})
     user_chat_history[user_id].append({"role": "assistant", "content": rst})
+
+    await send_custom_msg(token, from_user_name, rst)
 
 
 async def send_custom_msg(token,open_id, msg):
@@ -141,7 +144,10 @@ async def deal_wechat_msg(request: Request):
         token = await get_access_token()
         if token != -1:
             if msg_type == "text":
-                await send_custom_msg(token, from_user_name, "hello")
+                content = root.find('./Content').text
+                msg_id = root.find('./MsgId').text
+                user_msg_id = f"{from_user_name}_{msg_id}"
+                asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
             else:
                 return HTMLResponse(
                     content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
