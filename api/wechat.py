@@ -254,7 +254,7 @@ async def try_pay(request: Request):
                         });
                         
                         wx.ready(function() {
-                        alert("ready")
+                            pay()
                         })
                     
                         function pay(){
