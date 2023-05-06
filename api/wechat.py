@@ -141,7 +141,7 @@ async def deal_wechat_msg(request: Request):
         token = await get_access_token()
         if token != -1:
             if msg_type == "text":
-                await send_custom_msg(token, from_user_name, "测试")
+                await send_custom_msg(token, from_user_name, "hello")
             else:
                 return HTMLResponse(
                     content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
