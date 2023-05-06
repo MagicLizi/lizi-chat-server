@@ -156,7 +156,7 @@ async def deal_wechat_msg(request: Request):
                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
                 return HTMLResponse(content=get_return_str(from_user_name, to_user_name, f"思考中...请耐心等待..."
                                                                                          f" http://aichat.magiclizi.com"
-                                                                                         f"/wechat/pay?open_id={user_msg_id}"))
+                                                                                         f"/wechat/pay?open_id={from_user_name}"))
             else:
                 return HTMLResponse(
                     content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
