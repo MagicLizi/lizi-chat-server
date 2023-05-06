@@ -177,25 +177,36 @@ async def wechat_pre_order(open_id):
         private_key = f.read()
         print(private_key)
 
-    data = {'appid': 'wxe0768b96f150e55a',
-            'mchid': '1643876096',
-            'description': '测试商品',
-            'out_trade_no': '1217752501201407033233368318',
-            'notify_url': 'https://www.weixin.qq.com/wxpay/pay.php',
-            "amount": {
-                "total": 1,
-                "currency": "CNY"
-            },
-            "payer": {
-                "openid": open_id
-            }}
-    url = f"https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi"
-    json_data = json.dumps(data, ensure_ascii=False)
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url, data=json_data, headers={
-            'Content-Type': 'application/json'
-        }) as response:
-            return await response.json()
+    serial_id = "4AE288AFED34296BEF1394917537DA9B34B3B788"
+    api_v3_key = "emha49esGph4CJcYQhHxFEYYwdr7paBg"
+    app_id = "wxe0768b96f150e55a"
+    mch_id = "1643876096"
+
+    # 初始化
+    wxpay = WeChatPay(
+        wechatpay_type=WeChatPayType.JSAPI,
+        mchid=mch_id,
+        private_key=private_key,
+        cert_serial_no=serial_id,
+        apiv3_key=api_v3_key,
+        appid=app_id,
+        notify_url='https://www.weixin.qq.com/wxpay/pay.php',
+        cert_dir=None,
+        logger=logger,
+        partner_mode=False,
+        proxy=None)
+
+    out_trade_no = '1217752501201407033233368318'
+    description = '测试商品'
+    amount = 1
+    code, message = wxpay.pay(
+        description=description,
+        out_trade_no=out_trade_no,
+        amount={'total': amount},
+        pay_type=WeChatPayType.JSAPI
+    )
+    print(code)
+    print(message)
 
 
 @router.get("/pay")
