@@ -244,10 +244,10 @@ async def try_pay(request: Request):
                     
                         wx.config({
                            debug: false,
-                           appId: $appId,
-                           timestamp: $timestamp,
-                           nonceStr: $nonceStr,
-                           signature: $signature,
+                           appId: "$appId",
+                           timestamp: "$timestamp",
+                           nonceStr: "$nonceStr",
+                           signature: "$signature",
                            jsApiList: [
                             'chooseWXPay'
                            ]
