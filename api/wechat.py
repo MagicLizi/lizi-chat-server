@@ -172,12 +172,46 @@ async def deal_wechat_msg(request: Request):
 @router.get("/pay")
 async def try_pay(request: Request):
     return HTMLResponse(content="""
-    <html>
-        <head>
-            <title>FastAPI HTML Response</title>
-        </head>
-        <body>
-            <h1>Hello, world!</h1>
-        </body>
-    </html>
+    <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>微信支付</title>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script>
+        // 微信 JSAPI 配置
+        wx.config({
+            debug: false,
+            appId: '微信公众号 APPID',
+            timestamp: '生成签名的时间戳',
+            nonceStr: '生成签名的随机字符串',
+            signature: '生成的签名',
+            jsApiList: ['chooseWXPay']
+        });
+        
+        // 点击支付按钮
+        function pay() {
+            // 调用微信支付接口
+            wx.chooseWXPay({
+                timestamp: '生成预支付订单的时间戳',
+                nonceStr: '生成预支付订单的随机字符串',
+                package: '预支付订单信息',
+                signType: 'MD5',
+                paySign: '生成的支付签名',
+                success: function (res) {
+                    // 支付成功后的回调函数
+                    alert('支付成功');
+                },
+                fail: function (res) {
+                    // 支付失败后的回调函数
+                    alert('支付失败');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <button onclick="pay()">微信支付</button>
+</body>
+</html>
     """)
