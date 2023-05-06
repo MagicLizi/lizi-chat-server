@@ -136,7 +136,7 @@ async def get_access_token():
 @router.post("/cmd")
 async def deal_wechat_msg(request: Request):
     # 先不需要数据库
-    valid_user = ["ocZ6M5sE2AdKmvzd40GQ2fyKVZMU"]
+    valid_user = ["ocZ6M5sE2AdKmvzd40GQ2fyKVZMU", "ocZ6M5hxSsxITkCJyFUUBgUyUDLY"]
     body = await request.body()
     root = ET.fromstring(body)
     to_user_name = root.find('./ToUserName').text
