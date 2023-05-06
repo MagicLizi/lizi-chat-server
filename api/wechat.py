@@ -33,10 +33,8 @@ def get_return_str(from_user_name: str, to_user_name: str, content: str):
 
     content_xml = ET.SubElement(root, "Content")
     content_xml.text = content
-    print(content)
     # 将XML树转换为字符串
-    xml_string = ET.tostring(root, method="xml")
-    print(xml_string)
+    xml_string = ET.tostring(root, encoding="utf-8", method="xml")
     return xml_string
 
 
@@ -159,7 +157,7 @@ async def deal_wechat_msg(request: Request):
                 user_msg_id = f"{from_user_name}_{msg_id}"
                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
                 return_str = "思考中...请耐心等待..."
-                url = f"aichat.magiclizi.com/wechat/pay?open_id={from_user_name}"
+                url = f"http://aichat.magiclizi.com"
                 test_link = f"<a href={url}>测试支付</a>"
                 return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str + test_link))
             else:
