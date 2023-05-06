@@ -260,7 +260,6 @@ async def try_pay(request: Request):
                             });
                         }
                         window.onload = function() {
-                            alert("123")
                             pay();
                         };
                     </script>
@@ -270,5 +269,9 @@ async def try_pay(request: Request):
                 </body>
                 </html>
             """
+        print(rst['timeStamp'])
+        print(rst['nonceStr'])
+        print(rst['package'])
+        print(rst['paySign'])
         html_content_last = html_content.format(rst['timeStamp'], rst['nonceStr'], rst['package'], rst['paySign'])
         return HTMLResponse(content=html_content_last)
