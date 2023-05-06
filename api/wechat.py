@@ -84,6 +84,7 @@ async def get_access_token():
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             res = await response.json()
+            print(res)
             if 'access_token' in res:
                 access_token = {
                     "value": res['access_token'],
