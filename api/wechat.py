@@ -12,6 +12,7 @@ import json
 from wechatpayv3 import SignType, WeChatPay, WeChatPayType
 import time
 import random
+import re
 
 router = APIRouter()
 
@@ -232,8 +233,6 @@ async def try_pay(request: Request):
     rst = await wechat_pre_order(request.query_params["open_id"])
     if rst is not None:
         print(rst)
-        s = "ada{}"
-        ss = s.format("dsa")
         html_content = """
             <!DOCTYPE html>
                 <html>
@@ -242,8 +241,21 @@ async def try_pay(request: Request):
                     <title>微信支付</title>
                     <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
                     <script>
+                    
+                        // 配置微信JSAPI参数
+                        wx.config({
+                           debug: false,
+                           appId: $appId,
+                           timestamp: $timestamp,
+                           nonceStr: $nonceStr,
+                           signature: signature,
+                           jsApiList: [
+                            'chooseWXPay'
+                           ]
+                        });
+                    
                         // 点击支付按钮
-                        function pay() {
+                        wx.ready(function(){
                             // 调用微信支付接口
                             wx.chooseWXPay({
                                 timestamp: $timestamp,
@@ -260,10 +272,7 @@ async def try_pay(request: Request):
                                     alert('支付失败');
                                 }
                             });
-                        }
-                        window.onload = function() {
-                            pay();
-                        };
+                        })
                     </script>
                 </head>
                 <body>
@@ -271,12 +280,9 @@ async def try_pay(request: Request):
                 </body>
                 </html>
             """
-        print(rst['timeStamp'])
-        print(rst['nonceStr'])
-        print(rst['package'])
-        print(rst['paySign'])
-        html_content_last = html_content.replace("$timestamp", rst['timeStamp'])
-        html_content_last = html_content_last.replace("$nonceStr", rst['nonceStr'])
-        html_content_last = html_content_last.replace("$package", rst['package'])
-        html_content_last = html_content_last.replace("$paySign", rst['paySign'])
-        return HTMLResponse(content=html_content_last)
+        html_content = re.sub("$timestamp", rst['timeStamp'], html_content)
+        html_content = re.sub("$timestamp", rst['timeStamp'], html_content)
+        html_content = re.sub("$timestamp", rst['timeStamp'], html_content)
+        html_content = re.sub("$timestamp", rst['timeStamp'], html_content)
+        print(html_content)
+        return HTMLResponse(content=html_content)
