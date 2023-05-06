@@ -165,3 +165,17 @@ async def deal_wechat_msg(request: Request):
         logger.info(f"用户:{from_user_name}非法")
         return HTMLResponse(
             content=get_return_str(from_user_name, to_user_name, "你是非法用户哦！！找Lizi！！如果你不认识她，就算了！"))
+
+
+@router.get("/pay")
+async def try_pay(request: Request):
+    return HTMLResponse(content="""
+    <html>
+        <head>
+            <title>FastAPI HTML Response</title>
+        </head>
+        <body>
+            <h1>Hello, world!</h1>
+        </body>
+    </html>
+    """)
