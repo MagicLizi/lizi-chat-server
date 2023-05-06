@@ -241,37 +241,9 @@ async def try_pay(request: Request):
                     <title>微信支付</title>
                     <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
                     <script>
-                    
-                        // 配置微信JSAPI参数
-                        wx.config({
-                           debug: false,
-                           appId: $appId,
-                           timestamp: $timestamp,
-                           nonceStr: $nonceStr,
-                           signature: $signature,
-                           jsApiList: [
-                            'chooseWXPay'
-                           ]
-                        });
-                        
                         function pay(){
                             alert("trypay")
                             // 调用微信支付接口
-                            wx.chooseWXPay({
-                                timestamp: $timestamp,
-                                nonceStr: $nonceStr,
-                                package: $package,
-                                signType: $signType,
-                                paySign: $paySign,
-                                success: function (res) {
-                                    // 支付成功后的回调函数
-                                    alert('支付成功');
-                                },
-                                fail: function (res) {
-                                    // 支付失败后的回调函数
-                                    alert('支付失败');
-                                }
-                            });
                         }
                     </script>
                 </head>
