@@ -93,9 +93,11 @@ async def get_access_token():
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
                 res = await response.json()
+                print(res)
                 if 'access_token' in res:
                     token_dic["value"] = res['access_token']
                     token_dic["expires"] = int(time.time()) + res['expires_in']
+                    print(token_dic)
                     return token_dic.value
                 else:
                     return -1
