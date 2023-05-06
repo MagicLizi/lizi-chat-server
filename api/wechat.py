@@ -154,7 +154,7 @@ async def deal_wechat_msg(request: Request):
                 user_msg_id = f"{from_user_name}_{msg_id}"
                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
                 return HTMLResponse(content=get_return_str(from_user_name, to_user_name, f"思考中...请耐心等待..."
-                                                                                         f" http://aichat.magiclizi.com"
+                                                                                         f" http://aichat.magiclizi.com?open_id={user_msg_id}"
                                                                                          f"/wechat/pay"))
             else:
                 return HTMLResponse(
@@ -167,6 +167,34 @@ async def deal_wechat_msg(request: Request):
         logger.info(f"用户:{from_user_name}非法")
         return HTMLResponse(
             content=get_return_str(from_user_name, to_user_name, "你是非法用户哦！！找Lizi！！如果你不认识她，就算了！"))
+
+
+async def wechat_pre_order(open_id):
+    params = {'appid': 'wxe0768b96f150e55a',
+              'mchid': '1643876096',
+              'description': '测试商品',
+              'out_trade_no': 'xxxxx',
+              'notify_url': 'xxxxxx',
+              "amount": {
+                "total": 1,
+                "currency": "CNY"
+              },
+              "payer": {
+                  "openid": open_id
+              }}
+    url = f"https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi"
+    # data = {
+    #     "touser": open_id,
+    #     "msgtype": "text",
+    #     "text":
+    #         {
+    #             "content": msg
+    #         }
+    # }
+    # json_data = json.dumps(data, ensure_ascii=False)
+    # async with aiohttp.ClientSession() as session:
+    #     async with session.post(url, data=json_data) as response:
+    #         return await response.json()
 
 
 @router.get("/pay")
