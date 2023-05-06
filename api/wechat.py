@@ -1,6 +1,6 @@
 import asyncio
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse,Response
+from fastapi.responses import HTMLResponse
 from util.log import logger
 import xml.etree.ElementTree as ET
 import time
@@ -150,9 +150,10 @@ async def deal_wechat_msg(request: Request):
                 msg_id = root.find('./MsgId').text
                 user_msg_id = f"{from_user_name}_{msg_id}"
                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
-                return HTMLResponse(content=get_return_str(from_user_name, to_user_name, ""))
+                return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "思考中...请耐心等待..."))
             else:
-                return Response()
+                return HTMLResponse(
+                    content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
         else:
             return HTMLResponse(
                 content=get_return_str(from_user_name, to_user_name, "系统错误！！"))
