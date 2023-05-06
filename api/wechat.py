@@ -76,8 +76,9 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
 
 async def get_user_info(token, openid):
     params = {'access_token': token,
-              'openid': openid,}
+              'openid': openid}
     url = f"https://api.weixin.qq.com/cgi-bin/user/info?{params}"
+    print(url)
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             res = await response.json()
