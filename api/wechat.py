@@ -174,7 +174,7 @@ async def wechat_pre_order(open_id):
     data = {'appid': 'wxe0768b96f150e55a',
               'mchid': '1643876096',
               'description': '测试商品',
-              'out_trade_no': 'xxxxx',
+              'out_trade_no': '1217752501201407033233368318',
               'notify_url': 'xxxxxx',
               "amount": {
                 "total": 1,
