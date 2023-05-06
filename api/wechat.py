@@ -270,22 +270,22 @@ async def try_pay(request: Request):
                                 success: function (res) {
                                     // 支付成功后的回调函数
                                     alert('支付成功');
+                                    WeixinJSBridge.call('closeWindow');
                                 },
                                 fail: function (res) {
                                     // 支付失败后的回调函数
                                     alert('支付失败');
+                                    WeixinJSBridge.call('closeWindow');
                                 },
                                 cancel: function(res) {
                                      // 支付取消后的操作
                                      alert('支付取消');
+                                     WeixinJSBridge.call('closeWindow');
                                 }
                             });
                         }
                     </script>
                 </head>
-                <body>
-                    <button onclick="pay()">微信支付</button>
-                </body>
                 </html>
             """
         html_content = re.sub("\$appId", rst['appId'], html_content)
