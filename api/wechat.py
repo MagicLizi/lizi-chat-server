@@ -152,7 +152,7 @@ async def deal_wechat_msg(request: Request):
                 print("gpt-回答")
                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
                 print("gpt-回答1")
-                return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "思考中...请耐心等待..."))
+                return HTMLResponse(content=get_return_str(from_user_name, to_user_name, ""))
             else:
                 return HTMLResponse(
                     content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
