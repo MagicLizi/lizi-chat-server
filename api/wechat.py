@@ -158,7 +158,7 @@ async def deal_wechat_msg(request: Request):
                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
                 return_str = "思考中...请耐心等待..."
                 url = f"http://aichat.magiclizi.com"
-                test_link = f"<a href='www.baidu.com'>测试支付</a>"
+                test_link = f"<a href='http://aichat.magiclizi.com'>测试支付</a>"
                 return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str + test_link))
             else:
                 return HTMLResponse(
