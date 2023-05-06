@@ -74,13 +74,22 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
     user_chat_history[user_id].append({"role": "assistant", "content": rst})
 
 
+async def get_user_info(token, openid):
+    params = {'access_token': token,
+              'openid': openid,}
+    url = f"https://api.weixin.qq.com/cgi-bin/user/info?{params}"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            res = await response.json()
+            return res
+
+
 async def get_access_token():
     need_new = False
     e_time = token_dic['expires']
     c_time = int(time.time())
 
     if c_time - 100 > e_time:
-        print("need new token")
         need_new = True
 
     if need_new:
@@ -93,11 +102,9 @@ async def get_access_token():
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
                 res = await response.json()
-                print(res)
                 if 'access_token' in res:
                     token_dic["value"] = res['access_token']
                     token_dic["expires"] = int(time.time()) + res['expires_in']
-                    print(token_dic)
                     return token_dic["value"]
                 else:
                     return -1
@@ -117,7 +124,8 @@ async def deal_wechat_msg(request: Request):
     if from_user_name in valid_user:
         token = await get_access_token()
         if token != -1:
-            print(token)
+            user = await get_user_info(token, from_user_name)
+            print(user)
     else:
         logger.info(f"用户:{from_user_name}非法")
         return HTMLResponse(
