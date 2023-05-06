@@ -207,7 +207,7 @@ async def wechat_pre_order(open_id):
         pay_type=WeChatPayType.JSAPI,
         payer={'openid': open_id}
     )
-
+    print(result)
     if code in range(200, 300):
         prepay_id = result.get('prepay_id')
         timestamp = str(int(time.time()))
