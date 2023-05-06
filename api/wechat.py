@@ -252,9 +252,13 @@ async def try_pay(request: Request):
                             'chooseWXPay'
                            ]
                         });
+                        
+                        wx.ready(function() {
+                        alert("ready")
+                        })
                     
                         function pay(){
-                            alert("trypay")
+
                             // 调用微信支付接口
                             wx.chooseWXPay({
                                 timestamp: "$timestamp",
@@ -269,6 +273,10 @@ async def try_pay(request: Request):
                                 fail: function (res) {
                                     // 支付失败后的回调函数
                                     alert('支付失败');
+                                },
+                                cancel: function(res) {
+                                     // 支付取消后的操作
+                                     alert('支付取消');
                                 }
                             });
                         }
