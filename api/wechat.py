@@ -9,6 +9,7 @@ import aiohttp
 from urllib.parse import urlencode
 import os
 from llm.openai_util import OpenAIUtil
+import json
 
 router = APIRouter()
 
@@ -77,19 +78,20 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
     await send_custom_msg(token, from_user_name, rst)
 
 
-async def send_custom_msg(token,open_id, msg):
+async def send_custom_msg(token, open_id, msg):
     params = {'access_token': token}
     url = f"https://api.weixin.qq.com/cgi-bin/message/custom/send?{urlencode(params)}"
     data = {
-        "touser":open_id,
-        "msgtype":"text",
+        "touser": open_id,
+        "msgtype": "text",
         "text":
-        {
-             "content":msg
-        }
+            {
+                "content": msg
+            }
     }
+    json_data = json.dumps(data)
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, json=data) as response:
+        async with session.post(url, data=json_data) as response:
             return await response.json()
 
 
