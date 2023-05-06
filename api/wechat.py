@@ -203,7 +203,8 @@ async def wechat_pre_order(open_id):
         description=description,
         out_trade_no=out_trade_no,
         amount={'total': amount},
-        pay_type=WeChatPayType.JSAPI
+        pay_type=WeChatPayType.JSAPI,
+        payer=open_id
     )
     print(code)
     print(message)
