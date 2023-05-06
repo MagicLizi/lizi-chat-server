@@ -240,25 +240,15 @@ async def try_pay(request: Request):
                     <title>微信支付</title>
                     <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
                     <script>
-                        // 微信 JSAPI 配置
-                        wx.config({
-                            debug: false,
-                            appId: 'wxe0768b96f150e55a',
-                            timestamp: '生成签名的时间戳',
-                            nonceStr: '生成签名的随机字符串',
-                            signature: '生成的签名',
-                            jsApiList: ['chooseWXPay']
-                        });
-
                         // 点击支付按钮
                         function pay() {
                             // 调用微信支付接口
                             wx.chooseWXPay({
-                                timestamp: '生成预支付订单的时间戳',
-                                nonceStr: '生成预支付订单的随机字符串',
-                                package: '预支付订单信息',
+                                timestamp: {},
+                                nonceStr: {},
+                                package: {},
                                 signType: 'MD5',
-                                paySign: '生成的支付签名',
+                                paySign: {},
                                 success: function (res) {
                                     // 支付成功后的回调函数
                                     alert('支付成功');
@@ -280,4 +270,5 @@ async def try_pay(request: Request):
                 </body>
                 </html>
             """
-        return HTMLResponse(content=html_content)
+        html_content_last = html_content.format(rst['timeStamp'], rst['nonceStr'], rst['package'], rst['paySign'])
+        return HTMLResponse(content=html_content_last)
