@@ -3,7 +3,6 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from util.log import logger
 import xml.etree.ElementTree as ET
-import time
 import tiktoken
 import aiohttp
 from urllib.parse import urlencode
@@ -11,6 +10,8 @@ import os
 from llm.openai_util import OpenAIUtil
 import json
 from wechatpayv3 import SignType, WeChatPay, WeChatPayType
+import time
+import random
 
 router = APIRouter()
 
@@ -199,66 +200,84 @@ async def wechat_pre_order(open_id):
     out_trade_no = '1217752501201407033233368318'
     description = '测试商品'
     amount = 1
-    code, message = wxpay.pay(
+    code, result = wxpay.pay(
         description=description,
         out_trade_no=out_trade_no,
         amount={'total': amount},
         pay_type=WeChatPayType.JSAPI,
         payer={'openid': open_id}
     )
-    print(code)
-    print(message)
+
+    if code in range(200, 300):
+        prepay_id = result.get('prepay_id')
+        timestamp = str(int(time.time()))
+        nonce_str = ''.join(random.sample('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 16))
+        package = 'prepay_id=' + prepay_id
+        paysign = wxpay.sign([app_id, timestamp, nonce_str, package])
+        signtype = 'RSA'
+        return {
+            'appId': app_id,
+            'timeStamp': timestamp,
+            'nonceStr': nonce_str,
+            'package': 'prepay_id=%s' % prepay_id,
+            'signType': signtype,
+            'paySign': paysign
+        }
+    else:
+        return None
 
 
 @router.get("/pay")
 async def try_pay(request: Request):
     rst = await wechat_pre_order(request.query_params["open_id"])
-    print(rst)
-    return HTMLResponse(content="""
-    <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>微信支付</title>
-            <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
-            <script>
-                // 微信 JSAPI 配置
-                wx.config({
-                    debug: false,
-                    appId: '微信公众号 APPID',
-                    timestamp: '生成签名的时间戳',
-                    nonceStr: '生成签名的随机字符串',
-                    signature: '生成的签名',
-                    jsApiList: ['chooseWXPay']
-                });
-                
-                // 点击支付按钮
-                function pay() {
-                    // 调用微信支付接口
-                    wx.chooseWXPay({
-                        timestamp: '生成预支付订单的时间戳',
-                        nonceStr: '生成预支付订单的随机字符串',
-                        package: '预支付订单信息',
-                        signType: 'MD5',
-                        paySign: '生成的支付签名',
-                        success: function (res) {
-                            // 支付成功后的回调函数
-                            alert('支付成功');
-                        },
-                        fail: function (res) {
-                            // 支付失败后的回调函数
-                            alert('支付失败');
+    if rst is not None:
+        print(rst)
+        html_content = """
+            <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>微信支付</title>
+                    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+                    <script>
+                        // 微信 JSAPI 配置
+                        wx.config({
+                            debug: false,
+                            appId: 'wxe0768b96f150e55a',
+                            timestamp: '生成签名的时间戳',
+                            nonceStr: '生成签名的随机字符串',
+                            signature: '生成的签名',
+                            jsApiList: ['chooseWXPay']
+                        });
+
+                        // 点击支付按钮
+                        function pay() {
+                            // 调用微信支付接口
+                            wx.chooseWXPay({
+                                timestamp: '生成预支付订单的时间戳',
+                                nonceStr: '生成预支付订单的随机字符串',
+                                package: '预支付订单信息',
+                                signType: 'MD5',
+                                paySign: '生成的支付签名',
+                                success: function (res) {
+                                    // 支付成功后的回调函数
+                                    alert('支付成功');
+                                },
+                                fail: function (res) {
+                                    // 支付失败后的回调函数
+                                    alert('支付失败');
+                                }
+                            });
                         }
-                    });
-                }
-                window.onload = function() {
-                    alert("123")
-                    pay();
-                };
-            </script>
-        </head>
-        <body>
-            <button onclick="pay()">微信支付</button>
-        </body>
-        </html>
-    """)
+                        window.onload = function() {
+                            alert("123")
+                            pay();
+                        };
+                    </script>
+                </head>
+                <body>
+                    <button onclick="pay()">微信支付</button>
+                </body>
+                </html>
+            """
+        return HTMLResponse(content=html_content)
