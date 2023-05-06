@@ -241,6 +241,18 @@ async def try_pay(request: Request):
                     <title>微信支付</title>
                     <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
                     <script>
+                    
+                        wx.config({
+                           debug: false,
+                           appId: $appId,
+                           timestamp: $timestamp,
+                           nonceStr: $nonceStr,
+                           signature: $signature,
+                           jsApiList: [
+                            'chooseWXPay'
+                           ]
+                        });
+                    
                         function pay(){
                             alert("trypay")
                             // 调用微信支付接口
