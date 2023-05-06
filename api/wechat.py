@@ -154,7 +154,7 @@ async def deal_wechat_msg(request: Request):
                 print("gpt-回答1")
                 return HTMLResponse(content=get_return_str(from_user_name, to_user_name, ""))
             else:
-                return HTMLResponse(content="success")
+                return ""
         else:
             return HTMLResponse(
                 content=get_return_str(from_user_name, to_user_name, "系统错误！！"))
