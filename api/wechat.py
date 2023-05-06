@@ -10,6 +10,7 @@ from urllib.parse import urlencode
 import os
 from llm.openai_util import OpenAIUtil
 import json
+from wechatpayv3 import SignType, WeChatPay, WeChatPayType
 
 router = APIRouter()
 
@@ -170,31 +171,33 @@ async def deal_wechat_msg(request: Request):
 
 
 async def wechat_pre_order(open_id):
-    print(open_id)
+    with open('../cert/apiclient_key.pem') as f:
+        private_key = f.read()
+        print(private_key)
+
     data = {'appid': 'wxe0768b96f150e55a',
-              'mchid': '1643876096',
-              'description': '测试商品',
-              'out_trade_no': '1217752501201407033233368318',
-              'notify_url': 'https://www.weixin.qq.com/wxpay/pay.php',
-              "amount": {
+            'mchid': '1643876096',
+            'description': '测试商品',
+            'out_trade_no': '1217752501201407033233368318',
+            'notify_url': 'https://www.weixin.qq.com/wxpay/pay.php',
+            "amount": {
                 "total": 1,
                 "currency": "CNY"
-              },
-              "payer": {
-                  "openid": open_id
-              }}
+            },
+            "payer": {
+                "openid": open_id
+            }}
     url = f"https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi"
     json_data = json.dumps(data, ensure_ascii=False)
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, data=json_data,headers={
-            'Content-Type':'application/json'
+        async with session.post(url, data=json_data, headers={
+            'Content-Type': 'application/json'
         }) as response:
             return await response.json()
 
 
 @router.get("/pay")
 async def try_pay(request: Request):
-
     rst = await wechat_pre_order(request.query_params["open_id"])
     print(rst)
     return HTMLResponse(content="""
