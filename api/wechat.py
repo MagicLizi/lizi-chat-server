@@ -175,7 +175,7 @@ async def wechat_pre_order(open_id):
               'mchid': '1643876096',
               'description': '测试商品',
               'out_trade_no': '1217752501201407033233368318',
-              'notify_url': 'xxxxxx',
+              'notify_url': 'https://www.weixin.qq.com/wxpay/pay.php',
               "amount": {
                 "total": 1,
                 "currency": "CNY"
