@@ -186,7 +186,9 @@ async def wechat_pre_order(open_id):
     url = f"https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi"
     json_data = json.dumps(data, ensure_ascii=False)
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, data=json_data) as response:
+        async with session.post(url, data=json_data,headers={
+            'Content-Type':'application/json'
+        }) as response:
             return await response.json()
 
 
