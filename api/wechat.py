@@ -42,7 +42,10 @@ async def verify_url(signature: str, timestamp: int, nonce: str, echostr: str):
 message_cache = {}
 message_cache_try_cnt = {}
 user_chat_history = {}
-
+token_dic = {
+    "value": "",
+    "expires": 0
+}
 
 async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: str):
     if user_id not in user_chat_history:
@@ -71,18 +74,14 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
     user_chat_history[user_id].append({"role": "assistant", "content": rst})
 
 
-token_dic = None
-
-
 async def get_access_token():
     need_new = False
-    if token_dic is None:
+    e_time = token_dic['expires']
+    c_time = int(time.time())
+
+    if c_time - 100 > e_time:
         need_new = True
-    else:
-        e_time = token_dic['expires']
-        c_time = int(time.time())
-        if c_time - 100 > e_time:
-            need_new = True
+
     if need_new:
         app_id = os.environ['WX_APPID']
         app_key = os.environ['WX_APP_SECRECT']
@@ -94,10 +93,8 @@ async def get_access_token():
             async with session.get(url) as response:
                 res = await response.json()
                 if 'access_token' in res:
-                    token_dic = {
-                        "value": res['access_token'],
-                        "expires": int(time.time()) + res['expires_in']
-                    }
+                    token_dic["value"] = res['access_token']
+                    token_dic["expires"] = int(time.time()) + res['expires_in']
                     return token_dic.value
                 else:
                     return -1
@@ -116,7 +113,7 @@ async def deal_wechat_msg(request: Request):
     msg_type = root.find('./MsgType').text
     if from_user_name in valid_user:
         token = await get_access_token()
-        if token!= -1:
+        if token != -1:
             print(token)
     else:
         logger.info(f"用户:{from_user_name}非法")
