@@ -256,6 +256,10 @@ async def try_pay(request: Request):
                     
                         // 点击支付按钮
                         wx.ready(function(){
+                            alert("ready")
+                        })
+                        
+                        function pay(){
                             // 调用微信支付接口
                             wx.chooseWXPay({
                                 timestamp: $timestamp,
@@ -272,7 +276,7 @@ async def try_pay(request: Request):
                                     alert('支付失败');
                                 }
                             });
-                        })
+                        }
                     </script>
                 </head>
                 <body>
