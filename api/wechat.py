@@ -211,7 +211,7 @@ async def wechat_pre_order(open_id):
             cert_serial_no=serial_id,
             apiv3_key=api_v3_key,
             appid=app_id,
-            notify_url='https://www.weixin.qq.com/wxpay/pay.php',
+            notify_url='https://aichat.magiclizi.com/wechat/pay_notify',
             cert_dir=None,
             logger=logger,
             partner_mode=False,
@@ -247,6 +247,16 @@ async def wechat_pre_order(open_id):
             return None
     else:
         return None
+
+
+@router.post("/pay_notify")
+async def pay_notify_post(request: Request):
+    print("pay_notify post")
+
+
+@router.get("/pay_notify")
+async def pay_notify_get(request: Request):
+    print("pay_notify get")
 
 
 @router.get("/pay")
