@@ -168,3 +168,29 @@ class Role(Base):
                 await s.rollback()
             return -1
 
+
+class WeChatUser(Base):
+    __tablename__ = 'wechat_user'
+    open_id = Column(String, primary_key=True)
+    free_cnt = Column(Integer)
+    subscribe_start = Column(String)
+    subscribe_end = Column(String)
+    is_valid = Column(Integer)
+    create_at = Column(Integer)
+
+    @staticmethod
+    async def user_exist(open_id):
+        async with async_session() as s:
+            try:
+                stmt = select(WeChatUser).where(WeChatUser.open_id == open_id)
+                result = await s.execute(stmt)
+                wechat_user = result.first()
+                await s.commit()
+                if wechat_user is not None:
+                    return wechat_user[0].id
+                else:
+                    return 0
+            except(DatabaseError, ProgrammingError) as e:
+                await s.rollback()
+                return -1
+

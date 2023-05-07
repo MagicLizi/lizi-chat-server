@@ -13,6 +13,7 @@ from wechatpayv3 import SignType, WeChatPay, WeChatPayType
 import time
 import random
 import re
+from module.db import WeChatUser
 
 router = APIRouter()
 
@@ -148,6 +149,11 @@ async def deal_wechat_msg(request: Request):
     to_user_name = root.find('./ToUserName').text
     from_user_name = root.find('./FromUserName').text
     msg_type = root.find('./MsgType').text
+
+    # 检查用户状态
+    user = await WeChatUser.user_exist(from_user_name)
+    print(user)
+
     if from_user_name in valid_user:
         token = await get_access_token()
         if token != -1:
@@ -157,7 +163,6 @@ async def deal_wechat_msg(request: Request):
                 user_msg_id = f"{from_user_name}_{msg_id}"
                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
                 return_str = "思考中...请耐心等待..."
-                url = f"http://aichat.magiclizi.com"
                 test_link = f"<a href='http://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>测试支付</a>"
                 return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str + test_link))
             else:
@@ -210,8 +215,6 @@ async def wechat_pre_order(open_id):
         payer={'openid': open_id}
     )
     result = json.loads(message)
-    print(code)
-    print(result)
     if code in range(200, 300):
         prepay_id = result.get('prepay_id')
         timestamp = str(int(time.time()))
