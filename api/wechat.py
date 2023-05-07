@@ -211,7 +211,8 @@ async def deal_wechat_msg(request: Request):
                     asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
 
                     remaining_time = datetime.timedelta(seconds=last_time)
-                    remaining_time_str = str(remaining_time)
+                    remaining_time_str = "{} 天, {} 小时, {} 分钟".\
+                        format(remaining_time.days, remaining_time.seconds // 3600, (remaining_time.seconds // 60) % 60)
 
                     return_str = f"思考中...请耐心等待...当前订阅时间剩余：{remaining_time_str}"
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str))
