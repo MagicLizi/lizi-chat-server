@@ -191,7 +191,7 @@ async def wechat_pre_order(open_id):
     fee = 1
     order_id = await Order.create_order(open_id, "subscribe_month", fee)
     if order_id != -1:
-        print(order_id)
+        # print(order_id)
         current_dir = os.getcwd()
         file_path = os.path.join(current_dir, 'cert/apiclient_key.pem')
         with open(file_path) as f:
@@ -259,7 +259,7 @@ async def pay_notify_post(request: Request):
 async def try_pay(request: Request):
     rst = await wechat_pre_order(request.query_params["open_id"])
     if rst is not None:
-        print(rst)
+        # print(rst)
         html_content = """
             <!DOCTYPE html>
                 <html>
