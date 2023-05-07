@@ -175,8 +175,8 @@ class WeChatUser(Base):
     id = Column(Integer, primary_key=True)
     open_id = Column(String)
     free_cnt = Column(Integer)
-    subscribe_start = Column(String)
-    subscribe_end = Column(String)
+    subscribe_start = Column(Integer)
+    subscribe_end = Column(Integer)
     is_valid = Column(Integer)
     create_at = Column(Integer)
 
