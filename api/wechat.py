@@ -13,7 +13,7 @@ from wechatpayv3 import SignType, WeChatPay, WeChatPayType
 import time
 import random
 import re
-from module.db import WeChatUser
+from module.db import WeChatUser, Order
 
 router = APIRouter()
 
@@ -187,57 +187,63 @@ async def deal_wechat_msg(request: Request):
 
 
 async def wechat_pre_order(open_id):
-    current_dir = os.getcwd()
-    file_path = os.path.join(current_dir, 'cert/apiclient_key.pem')
-    with open(file_path) as f:
-        private_key = f.read()
-        # print(private_key)
+    # 生成order
+    fee = 3000
+    order_id = Order.create_order(open_id, "subscribe_month", 3000)
+    if order_id != -1:
+        current_dir = os.getcwd()
+        file_path = os.path.join(current_dir, 'cert/apiclient_key.pem')
+        with open(file_path) as f:
+            private_key = f.read()
+            # print(private_key)
 
-    serial_id = "4AE288AFED34296BEF1394917537DA9B34B3B788"
-    api_v3_key = "emha49esGph4CJcYQhHxFEYYwdr7paBg"
-    app_id = "wxe0768b96f150e55a"
-    mch_id = "1643876096"
+        serial_id = "4AE288AFED34296BEF1394917537DA9B34B3B788"
+        api_v3_key = "emha49esGph4CJcYQhHxFEYYwdr7paBg"
+        app_id = "wxe0768b96f150e55a"
+        mch_id = "1643876096"
 
-    # 初始化
-    wxpay = WeChatPay(
-        wechatpay_type=WeChatPayType.JSAPI,
-        mchid=mch_id,
-        private_key=private_key,
-        cert_serial_no=serial_id,
-        apiv3_key=api_v3_key,
-        appid=app_id,
-        notify_url='https://www.weixin.qq.com/wxpay/pay.php',
-        cert_dir=None,
-        logger=logger,
-        partner_mode=False,
-        proxy=None)
+        # 初始化
+        wxpay = WeChatPay(
+            wechatpay_type=WeChatPayType.JSAPI,
+            mchid=mch_id,
+            private_key=private_key,
+            cert_serial_no=serial_id,
+            apiv3_key=api_v3_key,
+            appid=app_id,
+            notify_url='https://www.weixin.qq.com/wxpay/pay.php',
+            cert_dir=None,
+            logger=logger,
+            partner_mode=False,
+            proxy=None)
 
-    out_trade_no = '1217752501201407033233368312'
-    description = '测试商品'
-    amount = 1
-    code, message = wxpay.pay(
-        description=description,
-        out_trade_no=out_trade_no,
-        amount={'total': amount},
-        pay_type=WeChatPayType.JSAPI,
-        payer={'openid': open_id}
-    )
-    result = json.loads(message)
-    if code in range(200, 300):
-        prepay_id = result.get('prepay_id')
-        timestamp = str(int(time.time()))
-        nonce_str = ''.join(random.sample('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 16))
-        package = 'prepay_id=' + prepay_id
-        paysign = wxpay.sign([app_id, timestamp, nonce_str, package])
-        signtype = 'RSA'
-        return {
-            'appId': app_id,
-            'timeStamp': timestamp,
-            'nonceStr': nonce_str,
-            'package': 'prepay_id=%s' % prepay_id,
-            'signType': signtype,
-            'paySign': paysign
-        }
+        out_trade_no = order_id
+        description = '月卡-30元'
+        amount = fee
+        code, message = wxpay.pay(
+            description=description,
+            out_trade_no=out_trade_no,
+            amount={'total': amount},
+            pay_type=WeChatPayType.JSAPI,
+            payer={'openid': open_id}
+        )
+        result = json.loads(message)
+        if code in range(200, 300):
+            prepay_id = result.get('prepay_id')
+            timestamp = str(int(time.time()))
+            nonce_str = ''.join(random.sample('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 16))
+            package = 'prepay_id=' + prepay_id
+            paysign = wxpay.sign([app_id, timestamp, nonce_str, package])
+            signtype = 'RSA'
+            return {
+                'appId': app_id,
+                'timeStamp': timestamp,
+                'nonceStr': nonce_str,
+                'package': 'prepay_id=%s' % prepay_id,
+                'signType': signtype,
+                'paySign': paysign
+            }
+        else:
+            return None
     else:
         return None
 

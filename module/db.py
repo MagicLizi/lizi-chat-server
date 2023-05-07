@@ -6,6 +6,7 @@ from sqlalchemy import select, and_, update, insert
 from sqlalchemy.exc import DatabaseError, ProgrammingError
 import os
 import time
+import uuid
 
 db_path = os.environ["Lizi_Chat_DB"]
 engine = create_async_engine(db_path,
@@ -219,3 +220,28 @@ class WeChatUser(Base):
                 await s.rollback()
                 return -1
 
+
+class Order(Base):
+    __tablename__ = 'wechat_order'
+    id = Column(Integer, primary_key=True)
+    order_id = Column(String)
+    open_id = Column(String)
+    fee = Column(Integer)
+    product_id = Column(String)
+    state = Column(Integer)
+    pay_at = Column(String)
+    create_at = Column(String)
+
+    @staticmethod
+    async def create_order(open_id, product_id, fee):
+        async with async_session() as s:
+            try:
+                order_id = uuid.uuid4().hex
+                stmt = insert(Order).values(open_id=open_id, create_at=int(time.time()), product_id=product_id, fee=fee,
+                                            order_id=order_id)
+                await s.execute(stmt)
+                await s.commit()
+                return order_id
+            except(DatabaseError, ProgrammingError) as e:
+                await s.rollback()
+                return -1
