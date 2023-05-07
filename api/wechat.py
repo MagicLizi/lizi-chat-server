@@ -200,6 +200,8 @@ async def deal_wechat_msg(request: Request):
                 content=get_return_str(from_user_name, to_user_name, return_str + test_link))
     else:
         cur_time = int(time.time())
+        print(cur_time)
+        print(sub_end)
         if cur_time < sub_end:
             pass
         else:
