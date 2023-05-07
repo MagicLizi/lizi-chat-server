@@ -152,7 +152,11 @@ async def deal_wechat_msg(request: Request):
 
     # 检查用户状态
     user = await WeChatUser.user_exist(from_user_name)
-    print(user)
+    if user == 0:
+        # 创建用户
+        await WeChatUser.create_user(from_user_name)
+    else:
+        print(user)
 
     if from_user_name in valid_user:
         token = await get_access_token()

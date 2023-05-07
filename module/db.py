@@ -194,3 +194,15 @@ class WeChatUser(Base):
                 await s.rollback()
                 return -1
 
+    @staticmethod
+    async def create_user(open_id):
+        async with async_session() as s:
+            try:
+                stmt = insert(WeChatUser).values(open_id=open_id, create_at=int(time.time()))
+                await s.execute(stmt)
+                await s.commit()
+                return 1
+            except(DatabaseError, ProgrammingError) as e:
+                await s.rollback()
+                return -1
+
