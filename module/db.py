@@ -250,7 +250,7 @@ class Order(Base):
     async def order_complete(order_id, open_id):
         async with async_session() as s:
             try:
-                stmt = update(WeChatUser).values(open_id=open_id, order_id=order_id).values(state=1, pay_at = int(time.time()))
+                stmt = update(Order).values(open_id=open_id, order_id=order_id).values(state=1, pay_at=int(time.time()))
                 await s.execute(stmt)
                 await s.commit()
                 return 1
