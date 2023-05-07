@@ -178,7 +178,7 @@ async def deal_wechat_msg(request: Request):
         free_cnt = user.free_cnt
         sub_end = user.subscribe_end
 
-    if sub_end is None:
+    if sub_end == 0:
         if free_cnt > 0:
             token = await get_access_token()
             if token != -1:

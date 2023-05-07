@@ -227,13 +227,14 @@ class WeChatUser(Base):
                 cur_time = int(time.time())
                 end = cur_time + sub_duration
                 stmt = update(WeChatUser).where(and_(WeChatUser.open_id == open_id)).values(subscribe_start=cur_time,
-                                                                                            subscribe_end=end)
+                                                                                            subscribe_end=WeChatUser.subscribe_end+sub_duration)
                 await s.execute(stmt)
                 await s.commit()
                 return 1
             except(DatabaseError, ProgrammingError) as e:
                 await s.rollback()
                 return -1
+
 
 class Order(Base):
     __tablename__ = 'wechat_order'
