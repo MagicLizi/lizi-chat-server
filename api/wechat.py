@@ -321,5 +321,5 @@ async def try_pay(request: Request):
         html_content = re.sub("\$package", rst['package'], html_content)
         html_content = re.sub("\$signType", rst['signType'], html_content)
         html_content = re.sub("\$paySign", rst['paySign'], html_content)
-        print(html_content)
+        # print(html_content)
         return HTMLResponse(content=html_content)
