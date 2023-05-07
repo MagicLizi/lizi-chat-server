@@ -1,6 +1,6 @@
 import asyncio
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from util.log import logger
 import xml.etree.ElementTree as ET
 import tiktoken
@@ -250,7 +250,28 @@ async def wechat_pre_order(open_id):
 async def pay_notify_post(request: Request):
     body = await request.body()
     result = wxpay.callback(request.headers, body)
-    print(result)
+    if result and result.get('event_type') == 'TRANSACTION.SUCCESS':
+        resource = result.get('resource')
+        appid = resource.get('appid')
+        mchid = resource.get('mchid')
+        out_trade_no = resource.get('out_trade_no')
+        transaction_id = resource.get('transaction_id')
+        trade_type = resource.get('trade_type')
+        trade_state = resource.get('trade_state')
+        trade_state_desc = resource.get('trade_state_desc')
+        bank_type = resource.get('bank_type')
+        attach = resource.get('attach')
+        success_time = resource.get('success_time')
+        payer = resource.get('payer')
+        amount = resource.get('amount').get('total')
+        # TODO: 根据返回参数进行必要的业务处理，处理完后返回200或204
+        rst = await Order.order_complete(out_trade_no, payer)
+        if rst == 1:
+            return JSONResponse({'code': 'SUCCESS', 'message': '成功'})
+        else:
+            return JSONResponse({'code': 'FAILED', 'message': '失败'})
+    else:
+        return JSONResponse({'code': 'FAILED', 'message': '失败'})
 
 
 @router.get("/pay")
