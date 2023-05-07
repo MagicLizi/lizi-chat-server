@@ -200,10 +200,20 @@ async def deal_wechat_msg(request: Request):
                 content=get_return_str(from_user_name, to_user_name, return_str + test_link))
     else:
         cur_time = int(time.time())
-        print(cur_time)
-        print(sub_end)
-        if cur_time < sub_end:
-            pass
+        last_time = sub_end - cur_time
+        if last_time > 0:
+            token = await get_access_token()
+            if token != -1:
+                if msg_type == "text":
+                    content = root.find('./Content').text
+                    msg_id = root.find('./MsgId').text
+                    user_msg_id = f"{from_user_name}_{msg_id}"
+                    asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
+                    return_str = f"思考中...请耐心等待...当前订阅时间剩余：{last_time}"
+                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str))
+                else:
+                    return HTMLResponse(
+                        content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
         else:
             return_str = f"订阅时间已经结束，"
             test_link = f" <a href='https://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击订阅(30元 - 30天)</a>"
