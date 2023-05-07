@@ -188,7 +188,7 @@ class WeChatUser(Base):
                 wechat_user = result.first()
                 await s.commit()
                 if wechat_user is not None:
-                    return wechat_user[0].id
+                    return wechat_user[0]
                 else:
                     return 0
             except(DatabaseError, ProgrammingError) as e:
