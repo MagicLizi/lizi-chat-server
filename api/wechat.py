@@ -152,6 +152,7 @@ async def deal_wechat_msg(request: Request):
 
     # 检查用户状态
     free_cnt = 0
+    sub_end = None
     user = await WeChatUser.user_exist(from_user_name)
     if user == 0:
         # 创建用户
@@ -159,29 +160,30 @@ async def deal_wechat_msg(request: Request):
         free_cnt = 10
     else:
         free_cnt = user.free_cnt
+        sub_end = user.subscribe_end
 
-    if from_user_name in valid_user:
-        token = await get_access_token()
-        if token != -1:
-            if msg_type == "text":
-                content = root.find('./Content').text
-                msg_id = root.find('./MsgId').text
-                user_msg_id = f"{from_user_name}_{msg_id}"
-                asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
-                return_str = f"思考中...请耐心等待...当前剩余免费次数为：{free_cnt}"
-                test_link = f"<a href='http://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>测试支付</a>"
-                return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str + test_link))
-            else:
-                return HTMLResponse(
-                    content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
+    if sub_end is None:
+        if free_cnt > 0:
+            token = await get_access_token()
+            if token != -1:
+                if msg_type == "text":
+                    content = root.find('./Content').text
+                    msg_id = root.find('./MsgId').text
+                    user_msg_id = f"{from_user_name}_{msg_id}"
+                    await WeChatUser.update_free_cnt(from_user_name, free_cnt - 1)
+                    asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
+                    return_str = f"思考中...请耐心等待...当前剩余免费次数为：{free_cnt - 1}"
+                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str))
+                else:
+                    return HTMLResponse(
+                        content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
         else:
+            return_str = f"免费尝试次数已经用完，"
+            test_link = f" <a href='http://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击订阅(30元 - 30天)</a>"
             return HTMLResponse(
-                content=get_return_str(from_user_name, to_user_name, "系统错误！！"))
-
+                content=get_return_str(from_user_name, to_user_name, return_str + test_link))
     else:
-        logger.info(f"用户:{from_user_name}非法")
-        return HTMLResponse(
-            content=get_return_str(from_user_name, to_user_name, "你是非法用户哦！！找Lizi！！如果你不认识她，就算了！"))
+        pass
 
 
 async def wechat_pre_order(open_id):
