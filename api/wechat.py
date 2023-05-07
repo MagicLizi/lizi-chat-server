@@ -251,7 +251,9 @@ async def wechat_pre_order(open_id):
 
 @router.post("/pay_notify")
 async def pay_notify_post(request: Request):
-    print("pay_notify post")
+    body = await request.body()
+    root = ET.fromstring(body)
+    print(root)
 
 
 @router.get("/pay")
