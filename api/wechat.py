@@ -189,7 +189,7 @@ async def deal_wechat_msg(request: Request):
 async def wechat_pre_order(open_id):
     # 生成order
     fee = 3000
-    order_id = Order.create_order(open_id, "subscribe_month", 3000)
+    order_id = await Order.create_order(open_id, "subscribe_month", 3000)
     if order_id != -1:
         print(order_id)
         current_dir = os.getcwd()
