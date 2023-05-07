@@ -251,6 +251,7 @@ async def pay_notify_post(request: Request):
     body = await request.body()
     result = wxpay.callback(request.headers, body)
     if result and result.get('event_type') == 'TRANSACTION.SUCCESS':
+        print(result)
         resource = result.get('resource')
         appid = resource.get('appid')
         mchid = resource.get('mchid')
@@ -267,7 +268,7 @@ async def pay_notify_post(request: Request):
         # TODO: 根据返回参数进行必要的业务处理，处理完后返回200或204
         rst = await Order.order_complete(out_trade_no, payer["openid"])
         if rst == 1:
-            u_rst = await WeChatUser.update_free_cnt(payer["openid"], 2592000)  # 30 天
+            u_rst = await WeChatUser.update_subscribe(payer["openid"], 2592000)  # 30 天
             if u_rst == 1:
                 return JSONResponse({'code': 'SUCCESS', 'message': '成功'})
             else:
