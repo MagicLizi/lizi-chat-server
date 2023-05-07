@@ -222,7 +222,7 @@ class WeChatUser(Base):
 
     @staticmethod
     async def update_subscribe(open_id, sub_duration):
-        user = WeChatUser.user_exist(open_id)
+        user = await WeChatUser.user_exist(open_id)
         cur_subscribe_end = user["subscribe_end"]
         if cur_subscribe_end > 0:
             subscribe_end = cur_subscribe_end + sub_duration
