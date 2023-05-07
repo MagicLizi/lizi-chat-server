@@ -160,11 +160,6 @@ async def get_access_token():
 
 @router.post("/cmd")
 async def deal_wechat_msg(request: Request):
-    # 先不需要数据库
-    valid_user = ["ocZ6M5sE2AdKmvzd40GQ2fyKVZMU",
-                  "ocZ6M5hxSsxITkCJyFUUBgUyUDLY",
-                  "ocZ6M5lx03t2yDX4Q8r1Upks9UvQ",
-                  "ocZ6M5gj0vyKt6C6ZzEeSr5viq0g"]
     body = await request.body()
     root = ET.fromstring(body)
     to_user_name = root.find('./ToUserName').text
@@ -204,7 +199,14 @@ async def deal_wechat_msg(request: Request):
             return HTMLResponse(
                 content=get_return_str(from_user_name, to_user_name, return_str + test_link))
     else:
-        pass
+        cur_time = int(time.time())
+        if cur_time < sub_end:
+            pass
+        else:
+            return_str = f"订阅时间已经结束，"
+            test_link = f" <a href='https://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击订阅(30元 - 30天)</a>"
+            return HTMLResponse(
+                content=get_return_str(from_user_name, to_user_name, return_str + test_link))
 
 
 async def wechat_pre_order(open_id):
