@@ -222,12 +222,17 @@ class WeChatUser(Base):
 
     @staticmethod
     async def update_subscribe(open_id, sub_duration):
+        user = WeChatUser.user_exist(open_id)
+        cur_subscribe_end = user["subscribe_end"]
+        if cur_subscribe_end > 0:
+            subscribe_end = cur_subscribe_end + sub_duration
+        else:
+            subscribe_end = int(time.time()) + sub_duration
         async with async_session() as s:
             try:
                 cur_time = int(time.time())
-                end = cur_time + sub_duration
                 stmt = update(WeChatUser).where(and_(WeChatUser.open_id == open_id)).values(subscribe_start=cur_time,
-                                                                                            subscribe_end=WeChatUser.subscribe_end+sub_duration)
+                                                                                            subscribe_end=subscribe_end)
                 await s.execute(stmt)
                 await s.commit()
                 return 1
