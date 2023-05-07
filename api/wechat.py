@@ -191,6 +191,7 @@ async def wechat_pre_order(open_id):
     fee = 3000
     order_id = Order.create_order(open_id, "subscribe_month", 3000)
     if order_id != -1:
+        print(order_id)
         current_dir = os.getcwd()
         file_path = os.path.join(current_dir, 'cert/apiclient_key.pem')
         with open(file_path) as f:
