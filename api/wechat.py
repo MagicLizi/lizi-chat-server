@@ -17,6 +17,28 @@ from module.db import WeChatUser, Order
 
 router = APIRouter()
 
+serial_id = "4AE288AFED34296BEF1394917537DA9B34B3B788"
+api_v3_key = "emha49esGph4CJcYQhHxFEYYwdr7paBg"
+app_id = "wxe0768b96f150e55a"
+mch_id = "1643876096"
+current_dir = os.getcwd()
+file_path = os.path.join(current_dir, 'cert/apiclient_key.pem')
+with open(file_path) as f:
+    private_key = f.read()
+# 初始化
+wxpay = WeChatPay(
+    wechatpay_type=WeChatPayType.JSAPI,
+    mchid=mch_id,
+    private_key=private_key,
+    cert_serial_no=serial_id,
+    apiv3_key=api_v3_key,
+    appid=app_id,
+    notify_url='https://aichat.magiclizi.com/wechat/pay_notify',
+    cert_dir=None,
+    logger=logger,
+    partner_mode=False,
+    proxy=None)
+
 
 def get_return_str(from_user_name: str, to_user_name: str, content: str):
     # 创建根元素
@@ -118,7 +140,6 @@ async def get_access_token():
         need_new = True
 
     if need_new:
-        app_id = os.environ['WX_APPID']
         app_key = os.environ['WX_APP_SECRECT']
         params = {'grant_type': 'client_credential',
                   'appid': app_id,
@@ -192,30 +213,6 @@ async def wechat_pre_order(open_id):
     order_id = await Order.create_order(open_id, "subscribe_month", fee)
     if order_id != -1:
         # print(order_id)
-        current_dir = os.getcwd()
-        file_path = os.path.join(current_dir, 'cert/apiclient_key.pem')
-        with open(file_path) as f:
-            private_key = f.read()
-            # print(private_key)
-
-        serial_id = "4AE288AFED34296BEF1394917537DA9B34B3B788"
-        api_v3_key = "emha49esGph4CJcYQhHxFEYYwdr7paBg"
-        app_id = "wxe0768b96f150e55a"
-        mch_id = "1643876096"
-
-        # 初始化
-        wxpay = WeChatPay(
-            wechatpay_type=WeChatPayType.JSAPI,
-            mchid=mch_id,
-            private_key=private_key,
-            cert_serial_no=serial_id,
-            apiv3_key=api_v3_key,
-            appid=app_id,
-            notify_url='https://aichat.magiclizi.com/wechat/pay_notify',
-            cert_dir=None,
-            logger=logger,
-            partner_mode=False,
-            proxy=None)
 
         out_trade_no = order_id
         description = '月卡-30元'
@@ -252,6 +249,7 @@ async def wechat_pre_order(open_id):
 @router.post("/pay_notify")
 async def pay_notify_post(request: Request):
     body = await request.json()
+    request.data
     print(body)
 
 
