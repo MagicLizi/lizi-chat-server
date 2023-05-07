@@ -31,7 +31,7 @@ async def user_verify(request: Request, call_next):
         "/test",
         "/test/",
         "/wechat/cmd",
-        "/wechat/pay"
+        "/wechat/pay",
         "/wechat/pay_notify"
     ]
 
