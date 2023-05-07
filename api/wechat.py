@@ -179,7 +179,7 @@ async def deal_wechat_msg(request: Request):
                         content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
         else:
             return_str = f"免费尝试次数已经用完，"
-            test_link = f" <a href='http://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击订阅(30元 - 30天)</a>"
+            test_link = f" <a href='https://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击订阅(30元 - 30天)</a>"
             return HTMLResponse(
                 content=get_return_str(from_user_name, to_user_name, return_str + test_link))
     else:

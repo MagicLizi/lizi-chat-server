@@ -32,6 +32,7 @@ async def user_verify(request: Request, call_next):
         "/test/",
         "/wechat/cmd",
         "/wechat/pay"
+        "/wechat/pay_notify"
     ]
 
     if api in filter_api_list:
