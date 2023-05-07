@@ -14,7 +14,7 @@ import time
 import random
 import re
 from module.db import WeChatUser, Order
-
+import datetime
 router = APIRouter()
 
 serial_id = "4AE288AFED34296BEF1394917537DA9B34B3B788"
@@ -209,7 +209,11 @@ async def deal_wechat_msg(request: Request):
                     msg_id = root.find('./MsgId').text
                     user_msg_id = f"{from_user_name}_{msg_id}"
                     asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name))
-                    return_str = f"思考中...请耐心等待...当前订阅时间剩余：{last_time}"
+
+                    remaining_time = datetime.timedelta(seconds=last_time)
+                    remaining_time_str = str(remaining_time)
+
+                    return_str = f"思考中...请耐心等待...当前订阅时间剩余：{remaining_time_str}"
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str))
                 else:
                     return HTMLResponse(

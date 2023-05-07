@@ -6,6 +6,7 @@ from api import chat, user, test, wechat
 from util.secret import decode_user_token
 from module.api import Code
 from urllib.parse import urlencode, quote
+
 app = FastAPI()
 
 
