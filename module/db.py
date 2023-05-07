@@ -212,7 +212,7 @@ class WeChatUser(Base):
     async def update_free_cnt(open_id, free_cnt):
         async with async_session() as s:
             try:
-                stmt = update(WeChatUser).values(open_id=open_id).values(free_cnt=free_cnt)
+                stmt = update(WeChatUser).where(and_(WeChatUser.open_id == open_id)).values(free_cnt=free_cnt)
                 await s.execute(stmt)
                 await s.commit()
                 return 1
@@ -250,9 +250,8 @@ class Order(Base):
     async def order_complete(order_id, open_id):
         async with async_session() as s:
             try:
-                print(order_id)
-                print(open_id)
-                stmt = update(Order).values(open_id=open_id, order_id=order_id).values(state=1, pay_at=int(time.time()))
+                stmt = update(Order).where(and_(Order.order_id == order_id, Order.open_id == open_id))\
+                    .values(state=1,pay_at=int(time.time()))
                 await s.execute(stmt)
                 await s.commit()
                 return 1
