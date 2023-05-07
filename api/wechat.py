@@ -248,9 +248,9 @@ async def wechat_pre_order(open_id):
 
 @router.post("/pay_notify")
 async def pay_notify_post(request: Request):
-    body = await request.json()
-    request.data
-    print(body)
+    body = await request.body()
+    result = wxpay.callback(request.headers, body)
+    print(result)
 
 
 @router.get("/pay")
