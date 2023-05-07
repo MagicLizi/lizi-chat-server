@@ -250,10 +250,13 @@ class Order(Base):
     async def order_complete(order_id, open_id):
         async with async_session() as s:
             try:
+                print(order_id)
+                print(open_id)
                 stmt = update(Order).values(open_id=open_id, order_id=order_id).values(state=1, pay_at=int(time.time()))
                 await s.execute(stmt)
                 await s.commit()
                 return 1
             except(DatabaseError, ProgrammingError) as e:
+                print(e)
                 await s.rollback()
                 return -1
