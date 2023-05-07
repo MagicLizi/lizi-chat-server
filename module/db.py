@@ -171,7 +171,8 @@ class Role(Base):
 
 class WeChatUser(Base):
     __tablename__ = 'wechat_user'
-    open_id = Column(String, primary_key=True)
+    id = Column(Integer, primary_key=True)
+    open_id = Column(String)
     free_cnt = Column(Integer)
     subscribe_start = Column(String)
     subscribe_end = Column(String)
