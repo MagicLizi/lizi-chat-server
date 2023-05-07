@@ -245,6 +245,7 @@ class Order(Base):
     state = Column(Integer)
     pay_at = Column(String)
     create_at = Column(String)
+    wechat_order_id = Column(String)
 
     @staticmethod
     async def create_order(open_id, product_id, fee):
@@ -261,11 +262,11 @@ class Order(Base):
                 return -1
 
     @staticmethod
-    async def order_complete(order_id, open_id):
+    async def order_complete(order_id, open_id, transaction_id):
         async with async_session() as s:
             try:
                 stmt = update(Order).where(and_(Order.order_id == order_id, Order.open_id == open_id))\
-                    .values(state=1,pay_at=int(time.time()))
+                    .values(state=1, pay_at=int(time.time()), wechat_order_id = transaction_id)
                 await s.execute(stmt)
                 await s.commit()
                 return 1

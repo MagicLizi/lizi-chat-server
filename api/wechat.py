@@ -285,7 +285,7 @@ async def pay_notify_post(request: Request):
         payer = resource.get('payer')
         amount = resource.get('amount').get('total')
         # TODO: 根据返回参数进行必要的业务处理，处理完后返回200或204
-        rst = await Order.order_complete(out_trade_no, payer["openid"])
+        rst = await Order.order_complete(out_trade_no, payer["openid"], transaction_id)
         if rst == 1:
             u_rst = await WeChatUser.update_subscribe(payer["openid"], 2592000)  # 30 天
             if u_rst == 1:
