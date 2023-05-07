@@ -211,7 +211,7 @@ class WeChatUser(Base):
     async def update_free_cnt(open_id, free_cnt):
         async with async_session() as s:
             try:
-                stmt = update(User).values(open_id=open_id).values(free_cnt=free_cnt)
+                stmt = update(WeChatUser).values(open_id=open_id).values(free_cnt=free_cnt)
                 await s.execute(stmt)
                 await s.commit()
                 return 1
