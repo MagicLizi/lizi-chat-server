@@ -171,11 +171,12 @@ async def deal_wechat_msg(request: Request):
     sub_end = None
     user = await WeChatUser.user_exist(from_user_name)
     model = user.model
-    print(user)
+    print(model)
     if user == 0:
         # 创建用户
         await WeChatUser.create_user(from_user_name)
         free_cnt = 10
+        model = "gpt-3.5-turbo"
     else:
         free_cnt = user.free_cnt
         sub_end = user.subscribe_end
