@@ -171,7 +171,7 @@ async def deal_wechat_msg(request: Request):
     sub_end = None
     user = await WeChatUser.user_exist(from_user_name)
     model = user.model
-    print(model)
+    print(user)
     if user == 0:
         # 创建用户
         await WeChatUser.create_user(from_user_name)
