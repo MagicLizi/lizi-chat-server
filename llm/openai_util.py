@@ -26,7 +26,8 @@ class OpenAIUtil:
             temperature=temperature,
             n=n,
             stream=stream,
-            messages=messages
+            messages=messages,
+            max_tokens=512
         )
         assistant_message = response.choices[0].message['content']
         return assistant_message

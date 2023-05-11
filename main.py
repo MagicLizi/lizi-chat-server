@@ -6,6 +6,7 @@ from api import chat, user, test, wechat
 from util.secret import decode_user_token
 from module.api import Code
 from urllib.parse import urlencode, quote
+
 app = FastAPI()
 
 
@@ -30,7 +31,9 @@ async def user_verify(request: Request, call_next):
         "/user/sms",
         "/test",
         "/test/",
-        "/wechat/cmd"
+        "/wechat/cmd",
+        "/wechat/pay",
+        "/wechat/pay_notify"
     ]
 
     if api in filter_api_list:

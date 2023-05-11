@@ -6,6 +6,7 @@ from sqlalchemy import select, and_, update, insert
 from sqlalchemy.exc import DatabaseError, ProgrammingError
 import os
 import time
+import uuid
 
 db_path = os.environ["Lizi_Chat_DB"]
 engine = create_async_engine(db_path,
@@ -168,3 +169,114 @@ class Role(Base):
                 await s.rollback()
             return -1
 
+
+class WeChatUser(Base):
+    __tablename__ = 'wechat_user'
+    id = Column(Integer, primary_key=True)
+    open_id = Column(String)
+    free_cnt = Column(Integer)
+    subscribe_start = Column(Integer)
+    subscribe_end = Column(Integer)
+    is_valid = Column(Integer)
+    create_at = Column(Integer)
+
+    @staticmethod
+    async def user_exist(open_id):
+        async with async_session() as s:
+            try:
+                stmt = select(WeChatUser).where(WeChatUser.open_id == open_id)
+                result = await s.execute(stmt)
+                wechat_user = result.first()
+                await s.commit()
+                if wechat_user is not None:
+                    return wechat_user[0]
+                else:
+                    return 0
+            except(DatabaseError, ProgrammingError) as e:
+                await s.rollback()
+                return -1
+
+    @staticmethod
+    async def create_user(open_id):
+        async with async_session() as s:
+            try:
+                stmt = insert(WeChatUser).values(open_id=open_id, create_at=int(time.time()))
+                await s.execute(stmt)
+                await s.commit()
+                return 1
+            except(DatabaseError, ProgrammingError) as e:
+                await s.rollback()
+                return -1
+
+    @staticmethod
+    async def update_free_cnt(open_id, free_cnt):
+        async with async_session() as s:
+            try:
+                stmt = update(WeChatUser).where(and_(WeChatUser.open_id == open_id)).values(free_cnt=free_cnt)
+                await s.execute(stmt)
+                await s.commit()
+                return 1
+            except(DatabaseError, ProgrammingError) as e:
+                await s.rollback()
+                return -1
+
+    @staticmethod
+    async def update_subscribe(open_id, sub_duration):
+        user = await WeChatUser.user_exist(open_id)
+        cur_subscribe_end = user.subscribe_end
+        if cur_subscribe_end > 0:
+            subscribe_end = cur_subscribe_end + sub_duration
+        else:
+            subscribe_end = int(time.time()) + sub_duration
+        async with async_session() as s:
+            try:
+                cur_time = int(time.time())
+                stmt = update(WeChatUser).where(and_(WeChatUser.open_id == open_id)).values(subscribe_start=cur_time,
+                                                                                            subscribe_end=subscribe_end)
+                await s.execute(stmt)
+                await s.commit()
+                return 1
+            except(DatabaseError, ProgrammingError) as e:
+                await s.rollback()
+                return -1
+
+
+class Order(Base):
+    __tablename__ = 'wechat_order'
+    id = Column(Integer, primary_key=True)
+    order_id = Column(String)
+    open_id = Column(String)
+    fee = Column(Integer)
+    product_id = Column(String)
+    state = Column(Integer)
+    pay_at = Column(String)
+    create_at = Column(String)
+    wechat_order_id = Column(String)
+
+    @staticmethod
+    async def create_order(open_id, product_id, fee):
+        async with async_session() as s:
+            try:
+                order_id = uuid.uuid4().hex
+                stmt = insert(Order).values(open_id=open_id, create_at=int(time.time()), product_id=product_id, fee=fee,
+                                            order_id=order_id)
+                await s.execute(stmt)
+                await s.commit()
+                return order_id
+            except(DatabaseError, ProgrammingError) as e:
+                await s.rollback()
+                return -1
+
+    @staticmethod
+    async def order_complete(order_id, open_id, transaction_id):
+        async with async_session() as s:
+            try:
+                stmt = update(Order).where(and_(Order.order_id == order_id, Order.open_id == open_id))\
+                    .values(state=1, pay_at=int(time.time()), wechat_order_id = transaction_id)
+                await s.execute(stmt)
+                await s.commit()
+                return 1
+            except(DatabaseError, ProgrammingError) as e:
+                print(e)
+                await s.rollback()
+                return -1
