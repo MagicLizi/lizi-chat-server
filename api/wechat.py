@@ -75,7 +75,7 @@ token_dic = {
 }
 
 
-async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: str, token, from_user_name):
+async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: str, token, from_user_name, model):
     if user_id not in user_chat_history:
         user_chat_history[user_id] = list()
 
@@ -93,7 +93,7 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
         logger.info(f"{user_id} 需要清空聊天记录，已经大于3500了")
         user_chat_history[user_id] = list()
 
-    rst = await OpenAIUtil.chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id])
+    rst = await OpenAIUtil.chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id], model=model)
     logger.info(f"{user_msg_id} 返回:{rst}")
     message_cache[user_msg_id] = rst
 
@@ -170,6 +170,8 @@ async def deal_wechat_msg(request: Request):
     free_cnt = 0
     sub_end = None
     user = await WeChatUser.user_exist(from_user_name)
+    model = user.model
+    print(model)
     if user == 0:
         # 创建用户
         await WeChatUser.create_user(from_user_name)
