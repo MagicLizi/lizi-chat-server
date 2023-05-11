@@ -179,6 +179,7 @@ class WeChatUser(Base):
     subscribe_end = Column(Integer)
     is_valid = Column(Integer)
     create_at = Column(Integer)
+    model = Column(String)
 
     @staticmethod
     async def user_exist(open_id):
