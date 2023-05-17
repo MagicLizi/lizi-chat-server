@@ -170,7 +170,6 @@ async def deal_wechat_msg(request: Request):
     free_cnt = 0
     sub_end = None
     user = await WeChatUser.user_exist(from_user_name)
-    model = user.model
     if user == 0:
         # 创建用户
         await WeChatUser.create_user(from_user_name)
@@ -179,6 +178,7 @@ async def deal_wechat_msg(request: Request):
     else:
         free_cnt = user.free_cnt
         sub_end = user.subscribe_end
+        model = user.model
     logger.info(f"{from_user_name} 使用:{model}")
     if sub_end == 0:
         if free_cnt > 0:
