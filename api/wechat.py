@@ -190,7 +190,7 @@ async def deal_wechat_msg(request: Request):
                     user_msg_id = f"{from_user_name}_{msg_id}"
                     await WeChatUser.update_free_cnt(from_user_name, free_cnt - 1)
                     asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name, model))
-                    return_str = f"思考中...请耐心等待...当前剩余免费次数为：{free_cnt - 1}"
+                    return_str = f"思考中 {model} ...请耐心等待...当前剩余免费次数为：{free_cnt - 1}"
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str))
                 else:
                     return HTMLResponse(
@@ -216,7 +216,7 @@ async def deal_wechat_msg(request: Request):
                     remaining_time_str = "{} 天, {} 小时, {} 分钟".\
                         format(remaining_time.days, remaining_time.seconds // 3600, (remaining_time.seconds // 60) % 60)
 
-                    return_str = f"思考中...请耐心等待...当前订阅时间剩余：{remaining_time_str}"
+                    return_str = f"思考中 {model} ...请耐心等待...当前订阅时间剩余：{remaining_time_str}"
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str))
                 else:
                     return HTMLResponse(
