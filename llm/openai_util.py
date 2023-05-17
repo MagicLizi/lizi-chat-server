@@ -29,7 +29,8 @@ class OpenAIUtil:
             messages=messages,
             max_tokens=512
         )
-        print(response)
+
+        logger.info(response)
 
         assistant_message = response.choices[0].message['content']
         return assistant_message
