@@ -168,7 +168,7 @@ async def deal_wechat_msg(request: Request):
 
     # 检查用户状态
     free_cnt = 0
-    sub_end = None
+    sub_end = 0
     user = await WeChatUser.user_exist(from_user_name)
     if user == 0:
         # 创建用户
