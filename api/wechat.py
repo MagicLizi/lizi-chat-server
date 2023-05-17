@@ -187,10 +187,16 @@ async def deal_wechat_msg(request: Request):
             if token != -1:
                 if msg_type == "text":
                     content = root.find('./Content').text
+
+                    if content == "清除历史消息":
+                        user_chat_history[from_user_name] = list()
+                        return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "清除历史消息成功！！"))
+
                     msg_id = root.find('./MsgId').text
                     user_msg_id = f"{from_user_name}_{msg_id}"
                     await WeChatUser.update_free_cnt(from_user_name, free_cnt - 1)
-                    asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name, model))
+                    asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name,
+                                                     model))
                     return_str = f"思考中 {model} ...请耐心等待...当前剩余免费次数为：{free_cnt - 1}"
                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str))
                 else:
@@ -209,6 +215,11 @@ async def deal_wechat_msg(request: Request):
             if token != -1:
                 if msg_type == "text":
                     content = root.find('./Content').text
+
+                    if content == "清除历史消息":
+                        user_chat_history[from_user_name] = list()
+                        return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "清除历史消息成功！！"))
+
                     msg_id = root.find('./MsgId').text
                     user_msg_id = f"{from_user_name}_{msg_id}"
                     asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name, model))
