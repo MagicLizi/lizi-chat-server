@@ -34,7 +34,7 @@ class OpenAIUtil:
             return assistant_message
         except Exception as e:
             logger.error(e)
-            return "出错拉，要不再发一次！"
+            return f"出错拉，要不再发一次！ {e}"
 
     @staticmethod
     def sync_chat(content: str, prompts: str,
