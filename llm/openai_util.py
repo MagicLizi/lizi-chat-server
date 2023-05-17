@@ -30,6 +30,7 @@ class OpenAIUtil:
             max_tokens=512
         )
         print(response)
+
         assistant_message = response.choices[0].message['content']
         return assistant_message
 
