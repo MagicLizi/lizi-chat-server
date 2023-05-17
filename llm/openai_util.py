@@ -20,20 +20,21 @@ class OpenAIUtil:
         if chat_history is not None:
             messages = chat_history + messages
         logger.info(f"当前发送：{messages}")
-        response = await openai.ChatCompletion.acreate(
-            ## model="gpt-3.5-turbo",
-            model=model,
-            temperature=temperature,
-            n=n,
-            stream=stream,
-            messages=messages,
-            max_tokens=512
-        )
-
-        logger.info(response)
-
-        assistant_message = response.choices[0].message['content']
-        return assistant_message
+        try:
+            response = await openai.ChatCompletion.acreate(
+                ## model="gpt-3.5-turbo",
+                model=model,
+                temperature=temperature,
+                n=n,
+                stream=stream,
+                messages=messages,
+                max_tokens=512
+            )
+            assistant_message = response.choices[0].message['content']
+            return assistant_message
+        except Exception as e:
+            logger.error(e)
+            return "出错拉，要不再发一次！"
 
     @staticmethod
     def sync_chat(content: str, prompts: str,
