@@ -2,6 +2,7 @@ import openai
 import os
 from typing import Union, List
 from util.log import logger
+
 openai.api_key = os.environ["LIZI_OA_KEY"]
 
 
@@ -31,10 +32,10 @@ class OpenAIUtil:
                 max_tokens=512
             )
             assistant_message = response.choices[0].message['content']
-            return assistant_message
+            return assistant_message, 1
         except Exception as e:
             logger.error(e)
-            return f"出错拉，要不再发一次！ {e}"
+            return f"出错拉，要不再发一次！ {e}", 0
 
     @staticmethod
     def sync_chat(content: str, prompts: str,

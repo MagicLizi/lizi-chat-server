@@ -93,13 +93,14 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
         logger.info(f"{user_id} 需要清空聊天记录，已经大于3500了")
         user_chat_history[user_id] = list()
 
-    rst = await OpenAIUtil.chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id], model=model)
+    rst, code = await OpenAIUtil.chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id], model=model)
     logger.info(f"{user_msg_id} 返回:{rst}")
     message_cache[user_msg_id] = rst
 
     # 保存用户聊天记录
-    user_chat_history[user_id].append({"role": "user", "content": content})
-    user_chat_history[user_id].append({"role": "assistant", "content": rst})
+    if code == 1:
+        user_chat_history[user_id].append({"role": "user", "content": content})
+        user_chat_history[user_id].append({"role": "assistant", "content": rst})
 
     await send_custom_msg(token, from_user_name, rst)
 
