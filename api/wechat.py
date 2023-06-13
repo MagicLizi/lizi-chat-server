@@ -222,7 +222,8 @@ async def deal_wechat_msg(request: Request):
 
                     msg_id = root.find('./MsgId').text
                     user_msg_id = f"{from_user_name}_{msg_id}"
-                    asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name, model))
+                    asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name,
+                                                     model))
 
                     remaining_time = datetime.timedelta(seconds=last_time)
                     remaining_time_str = "{} 天, {} 小时, {} 分钟".\

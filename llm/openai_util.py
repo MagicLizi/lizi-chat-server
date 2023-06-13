@@ -29,7 +29,7 @@ class OpenAIUtil:
                 n=n,
                 stream=stream,
                 messages=messages,
-                max_tokens=512
+                # max_tokens=
             )
             assistant_message = response.choices[0].message['content']
             return assistant_message, 1
