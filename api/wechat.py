@@ -188,7 +188,7 @@ async def deal_wechat_msg(request: Request):
                 if msg_type == "text":
                     content = root.find('./Content').text
 
-                    if content == "清除历史消息":
+                    if content == "清除历史消息" or content == "clear":
                         user_chat_history[from_user_name] = list()
                         return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "清除历史消息成功！！"))
 
