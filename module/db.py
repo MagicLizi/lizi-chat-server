@@ -201,7 +201,7 @@ class WeChatUser(Base):
     async def create_user(open_id):
         async with async_session() as s:
             try:
-                stmt = insert(WeChatUser).values(open_id=open_id, model="gpt-3.5-turbo", create_at=int(time.time()))
+                stmt = insert(WeChatUser).values(open_id=open_id, model="gpt-3.5-turbo-16k", create_at=int(time.time()))
                 await s.execute(stmt)
                 await s.commit()
                 return 1
