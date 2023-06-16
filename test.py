@@ -3,24 +3,41 @@
 # Author: MagicLizi 
 # Email: jiali@magiclizi.com | lizi@xd.com
 # Created Time: 2023/5/24 11:35
-from llm.openai_util import OpenAIUtil
-import asyncio
+import openai
+import os
 
-prompts = f"### 你的身份" \
-          f"你是一位情感细腻的AVG游戏剧本作者，帮我写一部AVG游戏的剧本，你输出的所有内容都只会和剧情内容有关" \
-          f"### 背景故事" \
-          f"小说的主角是希雅，她是一名19岁的大一新生，是一个开朗活泼的女孩，说话的语气和方式就像一个19岁的元气少女，曾经很喜欢古典音乐，但是因为小时候一次歌唱比赛的失利对音乐丧失了自信和兴趣，" \
-          f"现在的她永远不会主动提起和音乐相关的任何话题，同时无论谁和她谈论音乐话题，她都会努力的回避或者扯开，甚至有时候还会表现出有点生气。" \
-          f"希雅有着一头蓝色长发，但她总觉得自己的发色和周围的人在一起显得格格不入，她也总是因为发色感到困扰，她也会把这份困扰告诉她的朋友们来寻求一些帮助。" \
-          f"今天是希雅第一次来到大学，User在新生报道时帮助了希雅，同时他们也成为了普通朋友。" \
-          f"因为User和希雅是第一天认识，所以希雅也会想要在交谈中主动询问下User的一些爱好信息和出身。" \
-          f"我需要你根据当前的输入以及上述的背景故事和设定来编写小说中希雅的对话内容，需要注意的是：" \
-          f"希雅回答的内容，需要严格遵守上述的背景故事和小说的详细设定，并且要尽量简短，不能超过15个字" \
-          f"每句对话内容要符合希雅的性格，不要写出不符合希雅当前心情和性格设定的对话内容" \
-          f"你会在对话中用括号的方式加入一些肢体动作和神态表情，来帮助传递当前角色对话的情绪，比如：" \
-          f"今天真是多亏你啦(开心地笑了）" \
-          f"今天好累啊(叹了口气)" \
-          f"不要在对话前面加上角色名字，也不要加上引号"
+openai.api_key = os.environ["LIZI_OA_KEY"]
 
-rst, code = asyncio.run(OpenAIUtil.chat(content="你好，今天天气不错啊", prompts=prompts, chat_history=[]))
-print(rst)
+history_list = []
+
+
+def chat(role, msg):
+    history_list.append({"role": role, "content": msg})
+    completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-0613",
+        messages=history_list,
+        functions=[
+            {
+                "name": "get_current_weather",
+                "description": "Get the current weather in a given location",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "location": {
+                            "type": "string",
+                            "description": "The city and state, e.g. San Francisco, CA",
+                        },
+                        "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+                    },
+                    "required": ["location"],
+                },
+            }
+        ],
+        function_call="auto",
+    )
+    print(completion.choices[0].message)
+
+    history_list.append(completion.choices[0].message)
+
+
+chat('user', "What's the weather like in Boston?")
