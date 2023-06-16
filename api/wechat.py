@@ -154,6 +154,7 @@ async def get_access_token():
                     token_dic["expires"] = int(time.time()) + res['expires_in']
                     return token_dic["value"]
                 else:
+                    print(res)
                     return -1
     else:
         return token_dic["value"]
