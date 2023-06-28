@@ -89,7 +89,10 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
 
     logger.info(f"{user_id} 当前聊天记录Token长度:{cur_length}")
 
-    if cur_length >= 4000:
+    limit = 3500
+    if model == "gpt-4":
+        limit = 7000
+    if cur_length >= limit:
         logger.info(f"{user_id} 需要清空聊天记录，已经大于3500了")
         user_chat_history[user_id] = list()
 
@@ -176,7 +179,7 @@ async def deal_wechat_msg(request: Request):
         # 创建用户
         await WeChatUser.create_user(from_user_name)
         free_cnt = 10
-        model = "gpt-3.5-turbo-16k"
+        model = "gpt-3.5-turbo"
     else:
         free_cnt = user.free_cnt
         sub_end = user.subscribe_end
@@ -188,7 +191,7 @@ async def deal_wechat_msg(request: Request):
             if token != -1:
                 if msg_type == "text":
                     content = root.find('./Content').text
-                    logger.info(content)
+                    logger.info(f"当前用户消息：{content}")
                     if content == "清除历史消息" or content == "clear":
                         user_chat_history[from_user_name] = list()
                         return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "清除历史消息成功！！"))

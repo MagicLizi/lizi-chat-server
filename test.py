@@ -14,7 +14,7 @@ history_list = []
 def chat(role, msg):
     history_list.append({"role": role, "content": msg})
     completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0613",
+        model="gpt-3.5-turbo",
         messages=history_list,
         functions=[
             {

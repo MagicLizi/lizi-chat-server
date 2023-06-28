@@ -12,7 +12,7 @@ class OpenAIUtil:
     async def chat(content: str, prompts: str,
                    temperature: Union[float, None] = 0.5,
                    n: Union[int, None] = 1, stream: Union[bool, None] = False,
-                   chat_history: Union[List[str], None] = None, model="gpt-3.5-turbo-16k") \
+                   chat_history: Union[List[str], None] = None, model="gpt-3.5-turbo") \
             -> str:
         messages = [
             {"role": "system", "content": prompts},
@@ -51,7 +51,7 @@ class OpenAIUtil:
             messages = chat_history + messages
         logger.info(f"当前发送：{messages}")
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-16k",
+            model="gpt-3.5-turbo",
             temperature=temperature,
             n=n,
             stream=stream,
