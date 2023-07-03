@@ -4,7 +4,7 @@ from typing import Union, List
 from util.log import logger
 
 openai.api_key = os.environ["LIZI_OA_KEY"]
-
+openai.api_base = os.getenv("AZURE_OPENAI_KEY")
 
 class OpenAIUtil:
 
@@ -18,6 +18,7 @@ class OpenAIUtil:
             {"role": "system", "content": prompts},
             {"role": "user", "content": content}
         ]
+        model = "gpt-35-turbo"
         if chat_history is not None:
             messages = chat_history + messages
         logger.info(f"当前发送：{messages}")
