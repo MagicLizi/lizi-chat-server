@@ -3,7 +3,7 @@ import os
 from typing import Union, List
 from util.log import logger
 
-openai.api_key = os.environ["LIZI_OA_KEY"]
+openai.api_key = os.environ["AZURE_OPENAI_KEY"]
 openai.api_base = os.getenv("AZURE_OPENAI_KEY")
 
 class OpenAIUtil:
