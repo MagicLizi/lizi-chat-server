@@ -7,6 +7,8 @@ openai.api_key = os.environ["AZURE_OPENAI_KEY"]
 openai.api_base = os.getenv("AZURE_OPENAI_KEY")
 openai.api_type = "azure"
 openai.api_version = "2023-03-15-preview"
+print(openai.api_key)
+print(openai.api_base)
 
 class OpenAIUtil:
 
@@ -20,20 +22,17 @@ class OpenAIUtil:
             {"role": "system", "content": prompts},
             {"role": "user", "content": content}
         ]
-        model = "gpt-35-turbo"
         if chat_history is not None:
             messages = chat_history + messages
         logger.info(f"当前发送：{messages}")
         try:
             response = await openai.ChatCompletion.acreate(
-                ## model="gpt-3.5-turbo",
                 engine="Lizi-GPT35",
                 # model=model,
                 temperature=temperature,
                 n=n,
                 stream=stream,
                 messages=messages,
-                # max_tokens=
             )
             assistant_message = response.choices[0].message['content']
             return assistant_message, 1
