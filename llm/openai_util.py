@@ -5,6 +5,8 @@ from util.log import logger
 
 openai.api_key = os.environ["AZURE_OPENAI_KEY"]
 openai.api_base = os.getenv("AZURE_OPENAI_KEY")
+openai.api_type = "azure"
+openai.api_version = "2023-03-15-preview"
 
 class OpenAIUtil:
 
@@ -25,7 +27,8 @@ class OpenAIUtil:
         try:
             response = await openai.ChatCompletion.acreate(
                 ## model="gpt-3.5-turbo",
-                model=model,
+                engine="Lizi-GPT35",
+                # model=model,
                 temperature=temperature,
                 n=n,
                 stream=stream,
