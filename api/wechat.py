@@ -195,7 +195,11 @@ async def deal_wechat_msg(request: Request):
                     if content == "清除历史消息" or content.strip() == "clear":
                         user_chat_history[from_user_name] = list()
                         return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "清除历史消息成功！！"))
-
+                    if content == "pay":
+                        return_str = f"模拟支付"
+                        test_link = f" <a href='https://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击支付</a>"
+                        return HTMLResponse(
+                            content=get_return_str(from_user_name, to_user_name, return_str + test_link))
                     msg_id = root.find('./MsgId').text
                     user_msg_id = f"{from_user_name}_{msg_id}"
                     await WeChatUser.update_free_cnt(from_user_name, free_cnt - 1)
@@ -247,7 +251,7 @@ async def deal_wechat_msg(request: Request):
 
 async def wechat_pre_order(open_id):
     # 生成order
-    fee = 3000
+    fee = 1
     order_id = await Order.create_order(open_id, "subscribe_month", fee)
     if order_id != -1:
         # print(order_id)
