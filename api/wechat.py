@@ -185,68 +185,72 @@ async def deal_wechat_msg(request: Request):
         sub_end = user.subscribe_end
         model = user.model
     logger.info(f"{from_user_name} 使用:{model}")
-    if sub_end == 0:
-        if free_cnt > 0:
-            token = await get_access_token()
-            if token != -1:
-                if msg_type == "text":
-                    content = root.find('./Content').text
-                    logger.info(f"当前用户消息：{content}")
-                    if content == "清除历史消息" or content.strip() == "clear":
-                        user_chat_history[from_user_name] = list()
-                        return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "清除历史消息成功！！"))
-                    if content == "pay":
-                        return_str = f"模拟支付"
-                        test_link = f" <a href='https://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击支付</a>"
-                        return HTMLResponse(
-                            content=get_return_str(from_user_name, to_user_name, return_str + test_link))
-                    msg_id = root.find('./MsgId').text
-                    user_msg_id = f"{from_user_name}_{msg_id}"
-                    await WeChatUser.update_free_cnt(from_user_name, free_cnt - 1)
-                    asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name,
-                                                     model))
-                    return_str = f"思考中 {model} ...请耐心等待...当前剩余免费次数为：{free_cnt - 1}"
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str))
-                else:
+
+    if free_cnt > 0:
+        token = await get_access_token()
+        if token != -1:
+            if msg_type == "text":
+                content = root.find('./Content').text
+                logger.info(f"当前用户消息：{content}")
+                if content == "清除历史消息" or content.strip() == "clear":
+                    user_chat_history[from_user_name] = list()
+                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "清除历史消息成功！！"))
+                if content == "pay":
+                    return_str = f"模拟支付"
+                    test_link = f" <a href='https://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击支付</a>"
                     return HTMLResponse(
-                        content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
-        else:
-            return_str = f"免费尝试次数已经用完，"
-            test_link = f" <a href='https://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击订阅(30元 - 30天)</a>"
-            return HTMLResponse(
-                content=get_return_str(from_user_name, to_user_name, return_str + test_link))
+                        content=get_return_str(from_user_name, to_user_name, return_str + test_link))
+                msg_id = root.find('./MsgId').text
+                user_msg_id = f"{from_user_name}_{msg_id}"
+                await WeChatUser.update_free_cnt(from_user_name, free_cnt - 1)
+                asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name,
+                                                 model))
+                return_str = f"思考中 {model} ...请耐心等待...当前剩余免费次数为：{free_cnt - 1}"
+                return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str))
+            else:
+                return HTMLResponse(
+                    content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
     else:
-        cur_time = int(time.time())
-        last_time = sub_end - cur_time
-        if last_time > 0:
-            token = await get_access_token()
-            if token != -1:
-                if msg_type == "text":
-                    content = root.find('./Content').text
+        return_str = f"免费尝试次数已经用完，"
+        test_link = f" <a href='https://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击订阅(30元 - 30天)</a>"
+        return HTMLResponse(
+            content=get_return_str(from_user_name, to_user_name, return_str + test_link))
 
-                    if content == "清除历史消息":
-                        user_chat_history[from_user_name] = list()
-                        return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "清除历史消息成功！！"))
 
-                    msg_id = root.find('./MsgId').text
-                    user_msg_id = f"{from_user_name}_{msg_id}"
-                    asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name,
-                                                     model))
-
-                    remaining_time = datetime.timedelta(seconds=last_time)
-                    remaining_time_str = "{} 天, {} 小时, {} 分钟".\
-                        format(remaining_time.days, remaining_time.seconds // 3600, (remaining_time.seconds // 60) % 60)
-
-                    return_str = f"思考中 {model} ...请耐心等待...当前订阅时间剩余：{remaining_time_str}"
-                    return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str))
-                else:
-                    return HTMLResponse(
-                        content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
-        else:
-            return_str = f"订阅时间已经结束，"
-            test_link = f" <a href='https://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击订阅(30元 - 30天)</a>"
-            return HTMLResponse(
-                content=get_return_str(from_user_name, to_user_name, return_str + test_link))
+    # if sub_end == 0:
+    #
+    # else:
+    #     cur_time = int(time.time())
+    #     last_time = sub_end - cur_time
+    #     if last_time > 0:
+    #         token = await get_access_token()
+    #         if token != -1:
+    #             if msg_type == "text":
+    #                 content = root.find('./Content').text
+    #
+    #                 if content == "清除历史消息":
+    #                     user_chat_history[from_user_name] = list()
+    #                     return HTMLResponse(content=get_return_str(from_user_name, to_user_name, "清除历史消息成功！！"))
+    #
+    #                 msg_id = root.find('./MsgId').text
+    #                 user_msg_id = f"{from_user_name}_{msg_id}"
+    #                 asyncio.create_task(resp_gpt_msg(content, "", user_msg_id, from_user_name, token, from_user_name,
+    #                                                  model))
+    #
+    #                 remaining_time = datetime.timedelta(seconds=last_time)
+    #                 remaining_time_str = "{} 天, {} 小时, {} 分钟".\
+    #                     format(remaining_time.days, remaining_time.seconds // 3600, (remaining_time.seconds // 60) % 60)
+    #
+    #                 return_str = f"思考中 {model} ...请耐心等待...当前订阅时间剩余：{remaining_time_str}"
+    #                 return HTMLResponse(content=get_return_str(from_user_name, to_user_name, return_str))
+    #             else:
+    #                 return HTMLResponse(
+    #                     content=get_return_str(from_user_name, to_user_name, "你不要发除了文字以外的东西！！"))
+    #     else:
+    #         return_str = f"订阅时间已经结束，"
+    #         test_link = f" <a href='https://aichat.magiclizi.com/wechat/pay?open_id={from_user_name}'>点击订阅(30元 - 30天)</a>"
+    #         return HTMLResponse(
+    #             content=get_return_str(from_user_name, to_user_name, return_str + test_link))
 
 
 async def wechat_pre_order(open_id):
