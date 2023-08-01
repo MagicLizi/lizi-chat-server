@@ -92,6 +92,8 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
     limit = 3500
     if model == "gpt-4":
         limit = 7000
+
+    limit = 3500
     if cur_length >= limit:
         logger.info(f"{user_id} 需要清空聊天记录，已经大于3500了")
         user_chat_history[user_id] = list()
