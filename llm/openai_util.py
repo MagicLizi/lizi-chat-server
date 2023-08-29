@@ -3,10 +3,10 @@ import os
 from typing import Union, List
 from util.log import logger
 
-openai.api_key = os.environ["AZURE_OPENAI_KEY"]
-openai.api_base = os.getenv("AZURE_OPENAI_ENDPOINT")
-openai.api_type = "azure"
-openai.api_version = "2023-03-15-preview"
+openai.api_key = "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"
+# openai.api_base = os.getenv("AZURE_OPENAI_ENDPOINT")
+# openai.api_type = "azure"
+# openai.api_version = "2023-03-15-preview"
 
 
 class OpenAIUtil:
@@ -26,8 +26,8 @@ class OpenAIUtil:
         logger.info(f"当前发送：{messages}")
         try:
             response = await openai.ChatCompletion.acreate(
-                engine="Lizi-GPT35",
-                # model=model,
+                # engine="Lizi-GPT35",
+                model=model,
                 temperature=temperature,
                 n=n,
                 stream=stream,

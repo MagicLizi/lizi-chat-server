@@ -87,18 +87,15 @@ async def resp_gpt_msg(content: str, prompts: str, user_msg_id: str, user_id: st
         rst_length = len(enc_rst)
         cur_length = cur_length + rst_length
 
-    logger.info(f"{user_id} 当前聊天记录Token长度:{cur_length}")
-
     limit = 3500
     if model == "gpt-4":
         limit = 7000
-
-    limit = 3500
     if cur_length >= limit:
         logger.info(f"{user_id} 需要清空聊天记录，已经大于3500了")
         user_chat_history[user_id] = list()
-
-    rst, code = await OpenAIUtil.chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id], model=model)
+    logger.info(f"{user_id} 当前聊天记录Token长度:{cur_length} model {model} 服务长度限制 {limit}")
+    rst, code = await OpenAIUtil.chat(content=content, prompts=prompts, chat_history=user_chat_history[user_id],
+                                      model=model)
     logger.info(f"{user_msg_id} 返回:{rst}")
     message_cache[user_msg_id] = rst
 
