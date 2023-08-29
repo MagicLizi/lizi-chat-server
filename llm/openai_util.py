@@ -3,7 +3,7 @@ import os
 from typing import Union, List
 from util.log import logger
 
-openai.api_key = "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"
+openai.api_key = ""
 # openai.api_base = os.getenv("AZURE_OPENAI_ENDPOINT")
 # openai.api_type = "azure"
 # openai.api_version = "2023-03-15-preview"
