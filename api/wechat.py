@@ -180,6 +180,7 @@ async def deal_wechat_msg(request: Request):
         free_cnt = 10
         model = "gpt-3.5-turbo"
     else:
+        logger.info(user)
         free_cnt = user.free_cnt
         sub_end = user.subscribe_end
         model = user.model
