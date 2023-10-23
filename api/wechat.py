@@ -165,6 +165,7 @@ async def get_access_token():
 @router.post("/cmd")
 async def deal_wechat_msg(request: Request):
     body = await request.body()
+    logger.info(body)
     root = ET.fromstring(body)
     to_user_name = root.find('./ToUserName').text
     from_user_name = root.find('./FromUserName').text
